@@ -2,7 +2,6 @@
   "name": "vue3-mall-admin",
   "private": true,
   "version": "0.0.0",
-  "type": "module",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
@@ -11,16 +10,18 @@
   },
   "dependencies": {
     "element-plus": "^2.4.2",
-    "vue": "^3.3.8"
+    "vue": "^3.3.8",
+    "vue-router": "^4.2.5"
   },
   "devDependencies": {
+    "@babel/core": "^7.23.3",
     "@babel/eslint-parser": "^7.23.3",
     "@vitejs/plugin-vue": "^4.5.0",
     "eslint": "^8.54.0",
     "eslint-plugin-vue": "^9.18.1",
     "vite": "^5.0.0",
+    "vite-plugin-eslint": "^1.8.1",
     "vite-plugin-windicss": "^1.9.2",
-    "vue-eslint-parser": "^9.3.2",
     "windicss": "^3.5.6"
   }
 }
