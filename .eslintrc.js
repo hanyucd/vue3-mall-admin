@@ -32,6 +32,7 @@ module.exports = {
     'vue/singleline-html-element-content-newline': 'off', // 在单行元素的内容前后需要换行符
     'vue/require-default-prop': 'off', // 关闭 props 需要默认值
     'vue/no-v-html': 'off', // 关闭 Disallow use of v-html to prevent XSS attack
+    'vue/multi-word-component-names': 'off', // 关闭 组件名称始终是多个单词
     'semi': ['error', 'always'], // 强制在语句末尾使用分号
     'no-unused-vars': 'off', // 禁止使用未声明的变量
     'quotes': ['error', 'single', { 'allowTemplateLiterals': true }], // 强制使用单引号 & 允许字符串使用反勾号

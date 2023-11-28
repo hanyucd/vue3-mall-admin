@@ -9,6 +9,7 @@
     "lint": "eslint ."
   },
   "dependencies": {
+    "@element-plus/icons-vue": "^2.3.1",
     "element-plus": "^2.4.2",
     "vue": "^3.3.8",
     "vue-router": "^4.2.5"
@@ -19,6 +20,7 @@
     "@vitejs/plugin-vue": "^4.5.0",
     "eslint": "^8.54.0",
     "eslint-plugin-vue": "^9.18.1",
+    "sass": "^1.69.5",
     "vite": "^5.0.0",
     "vite-plugin-eslint": "^1.8.1",
     "vite-plugin-windicss": "^1.9.2",

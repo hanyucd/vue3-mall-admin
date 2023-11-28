@@ -1,12 +1,9 @@
 import { createRouter, createWebHistory, createWebHashHistory } from 'vue-router';
-
-const routes = [
-
-];
+import { constantRouterMap } from './routes';
 
 const router = createRouter({
   history: createWebHistory(),
-  routes
+  routes: constantRouterMap
 });
 
 export default router;
