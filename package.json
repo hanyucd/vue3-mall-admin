@@ -10,8 +10,11 @@
   },
   "dependencies": {
     "@element-plus/icons-vue": "^2.3.1",
+    "@vueuse/core": "^10.6.1",
+    "@vueuse/integrations": "^10.6.1",
     "axios": "^1.6.2",
     "element-plus": "^2.4.2",
+    "universal-cookie": "^6.1.1",
     "vue": "^3.3.8",
     "vue-router": "^4.2.5"
   },

@@ -34,7 +34,7 @@
           </el-input>
         </el-form-item>
         <el-form-item>
-          <el-button class="w-[250px]" round color="#626aef" size="large" type="primary" :loading="loading" @click="handleUserLogin"> 登 录 </el-button>
+          <el-button class="w-[250px]" round color="#626aef" size="large" type="primary" :loading="userLoginLoading" @click="handleUserLogin"> 登 录 </el-button>
         </el-form-item>
       </el-form>
     </el-col>
@@ -49,8 +49,8 @@ import { useRouter } from 'vue-router';
 const router = useRouter();
 const { proxy } = getCurrentInstance();
 
-const loading = ref(false);
 const userFormRef = ref(null); // 表单DOM节点引用 Ref
+const userLoginLoading = ref(false); // 用户登录状态
 // 用户登录表单信息
 const userForm = reactive({
   username: '',
@@ -68,6 +68,8 @@ const userFormRules = {
 const handleUserLogin = () => {
   userFormRef.value.validate(valid => {
     if (!valid) return false;
+    // 打开登录状态
+    userLoginLoading.value = true;
 
     proxy.$api.userLogin({ username: userForm.username, password: userForm.password })
       .then(res => {
@@ -83,15 +85,17 @@ const handleUserLogin = () => {
         router.replace('/');
       })
       .catch(error => {
-        console.log(error);
+        // console.log(error);
 
         ElNotification({
           type: 'warning',
           message: error.response.data.msg || '请求失败',
           duration: 3000
         });
+      })
+      .finally(()=>{
+        userLoginLoading.value = false;
       });
-    console.log('提交');
   });
 };
 </script>
