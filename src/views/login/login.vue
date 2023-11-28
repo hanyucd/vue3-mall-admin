@@ -18,23 +18,23 @@
         <span class="line"></span>
       </div>
 
-      <el-form ref="formRef" :model="form" class="w-[250px]">
+      <el-form ref="userFormRef" :rules="userFormRules" :model="userForm" class="w-[250px]">
         <el-form-item prop="username">
-          <el-input v-model="form.username" size="large" placeholder="请输入用户名">
+          <el-input v-model="userForm.username" size="large" placeholder="请输入用户名">
             <template #prefix>
               <el-icon><User /></el-icon>
             </template>
           </el-input>
         </el-form-item>
         <el-form-item prop="password">
-          <el-input v-model="form.password" type="password" show-password size="large" placeholder="请输入密码">
+          <el-input v-model="userForm.password" type="password" show-password size="large" placeholder="请输入密码">
             <template #prefix>
               <el-icon><Lock /></el-icon>
             </template>
           </el-input>
         </el-form-item>
         <el-form-item>
-          <el-button class="w-[250px]" round color="#626aef" size="large" type="primary" :loading="loading" @click="onSubmit"> 登 录 </el-button>
+          <el-button class="w-[250px]" round color="#626aef" size="large" type="primary" :loading="loading" @click="handleUserLogin"> 登 录 </el-button>
         </el-form-item>
       </el-form>
     </el-col>
@@ -42,19 +42,58 @@
 </template>
 
 <script setup>
-import { reactive, ref } from 'vue';
+import { reactive, ref, getCurrentInstance } from 'vue';
+import { ElNotification } from 'element-plus';
+import { useRouter } from 'vue-router';
+
+const router = useRouter();
+const { proxy } = getCurrentInstance();
 
 const loading = ref(false);
-
-const form = reactive({
+const userFormRef = ref(null); // 表单DOM节点引用 Ref
+// 用户登录表单信息
+const userForm = reactive({
   username: '',
   password: '',
 });
-
-const onSubmit = () => {
-  console.log('提交');
+// 用户登录表单验证规则
+const userFormRules = {
+  username: [ { required: true, message: '用户名不能为空', trigger: 'blur' } ],
+  password: [ { required: true, message: '密码不能为空', trigger: 'blur' } ]
 };
 
+/**
+ * 用户登录
+ */
+const handleUserLogin = () => {
+  userFormRef.value.validate(valid => {
+    if (!valid) return false;
+
+    proxy.$api.userLogin({ username: userForm.username, password: userForm.password })
+      .then(res => {
+        console.log(res);
+
+        ElNotification({
+          type: 'success',
+          message: '登录成功',
+          duration: 3000
+        });
+
+        // 跳转到首页
+        router.replace('/');
+      })
+      .catch(error => {
+        console.log(error);
+
+        ElNotification({
+          type: 'warning',
+          message: error.response.data.msg || '请求失败',
+          duration: 3000
+        });
+      });
+    console.log('提交');
+  });
+};
 </script>
 
 <style lang="scss" scoped>

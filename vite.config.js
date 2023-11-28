@@ -14,13 +14,20 @@ export default defineConfig({
   },
   server: {
     port: 8080,
+    proxy: {
+      '/api': {
+        target: 'http://ceshi13.dishait.cn',
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/api/, ''),
+      }
+    }
   },
   css: {
     // css预处理器
     preprocessorOptions: {
       // https://vueschool.io/articles/vuejs-tutorials/globally-load-sass-into-your-vue-js-applications/
       scss: {
-        // 这样就可以在全局中使用 mixin.scss中预定义的变量了 | 给导入的路径最后加上 ; 
+        // 这样就可以在全局中使用 common.scss中预定义的变量了 | 给导入的路径最后加上 ; 
         additionalData: `
           @import "@/common/style/common.scss";
         `
