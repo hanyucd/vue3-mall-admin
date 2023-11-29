@@ -9,6 +9,7 @@ import * as commonUtil from '@/common/utils';
 import * as ElementPlusIconsVue from '@element-plus/icons-vue';
 
 import 'virtual:windi.css';
+import '@/router/permission'; // 执行路由全局守卫
 
 const app = createApp(App);
 

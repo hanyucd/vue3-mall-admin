@@ -30,14 +30,13 @@ http.interceptors.request.use(config => {
  */
 http.interceptors.response.use(response => {
   // 2xx 范围内的状态码都会触发该函数
-  console.log(response);
-  
+  // console.log(response);
   const resData = response.data;
 
   return resData;
 }, error => {
   // 超出 2xx 范围的状态码都会触发该函数
-  console.log('错误', error);
+  // console.log('错误', error);
   const msg = error?.response.data.msg || '请求失败';
   
   commonUtil.elNotify(msg, 'error');

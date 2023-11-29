@@ -34,7 +34,7 @@
           </el-input>
         </el-form-item>
         <el-form-item>
-          <el-button class="w-[250px]" round color="#626aef" size="large" type="primary" :loading="userLoginLoading" @click="handleUserLogin"> 登 录 </el-button>
+          <el-button class="w-[250px]" round color="#626aef" size="large" type="primary" :loading="userLoginLoading" @click="handleUserLogin" @keyup.enter="handleUserLogin"> 登 录 </el-button>
         </el-form-item>
       </el-form>
     </el-col>
@@ -42,11 +42,13 @@
 </template>
 
 <script setup>
-import { reactive, ref, getCurrentInstance } from 'vue';
+import { reactive, ref, getCurrentInstance, onMounted, onBeforeUnmount } from 'vue';
 import { useRouter } from 'vue-router';
+import { useStore } from 'vuex';
 import authUtil from '@/common/utils/authUtil';
 
 const router = useRouter();
+const store = useStore();
 const { proxy } = getCurrentInstance();
 
 const userFormRef = ref(null); // 表单DOM节点引用 Ref
@@ -62,6 +64,23 @@ const userFormRules = {
   password: [ { required: true, message: '密码不能为空', trigger: 'blur' } ]
 };
 
+onMounted(() => {
+  // 添加键盘监听事件
+  document.addEventListener('keyup', onKeyupEvt);
+});
+
+onBeforeUnmount(() => {
+  // 移除键盘监听事件
+  document.removeEventListener('keyup', onKeyupEvt);
+});
+
+/**
+ * 监听键盘回车函数
+ */
+const onKeyupEvt = event => {
+  (event.key === 'Enter') && handleUserLogin();
+};
+
 /**
  * 用户登录
  */
@@ -71,23 +90,18 @@ const handleUserLogin = () => {
     // 打开登录状态
     userLoginLoading.value = true;
 
-    proxy.$api.userLogin({ username: userForm.username, password: userForm.password })
+    store.dispatch('userModule/userLoginAction', { username: userForm.username.trim(), password: userForm.password.trim() })
       .then(res => {
         console.log(res);
-        // 存储用户Token
-        authUtil.setUserToken(res.data.token);
-        
         proxy.$commonUtil.elNotify('登录成功');
-
-        // 跳转到首页
-        // router.replace('/');
+        router.replace('/');
       })
       .catch(error => {
-        console.log('登录错误', error);
+        console.log(error);
       })
-      .finally(()=>{
+      .finally(() => {
         userLoginLoading.value = false;
-      });
+      }); 
   });
 };
 </script>

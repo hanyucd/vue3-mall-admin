@@ -11,7 +11,7 @@ export const constantRouterMap = [
   },
   {
     path: '/login',
-    name: 'login',
+    name: 'loginRoute',
     component: () => import('@/views/login/login.vue'),
     meta: { title: '登录' }
   },
