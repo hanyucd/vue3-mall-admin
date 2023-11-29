@@ -1,4 +1,6 @@
 import axios from 'axios';
+import authUtil from '@/common/utils/authUtil';
+import * as commonUtil from '@/common/utils';
 
 const http = axios.create({
   // API 请求的默认前缀
@@ -14,6 +16,10 @@ http.interceptors.request.use(config => {
   config.headers['X-Nonce'] = Math.random().toString(36).slice(-10);
   config.headers['X-Api-Version'] = 'v1';
   config.headers['X-Device-Type'] = 'admin';
+  // 获取用户token
+  const userToken = authUtil.getUserToken();
+  userToken && (config.headers['token'] = userToken);
+
   return config;
 }, error => {
   return Promise.reject(error);
@@ -28,15 +34,13 @@ http.interceptors.response.use(response => {
   
   const resData = response.data;
 
-  if (resData.code !== 0) {
-    // Message.error({ message: resData.message || '服务错误' });
-    return Promise.reject(resData);
-  }
-
   return resData;
 }, error => {
   // 超出 2xx 范围的状态码都会触发该函数
-  console.log(error);
+  console.log('错误', error);
+  const msg = error?.response.data.msg || '请求失败';
+  
+  commonUtil.elNotify(msg, 'error');
   return Promise.reject(error);
 });
 

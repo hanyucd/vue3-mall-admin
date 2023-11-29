@@ -43,8 +43,8 @@
 
 <script setup>
 import { reactive, ref, getCurrentInstance } from 'vue';
-import { ElNotification } from 'element-plus';
 import { useRouter } from 'vue-router';
+import authUtil from '@/common/utils/authUtil';
 
 const router = useRouter();
 const { proxy } = getCurrentInstance();
@@ -74,24 +74,16 @@ const handleUserLogin = () => {
     proxy.$api.userLogin({ username: userForm.username, password: userForm.password })
       .then(res => {
         console.log(res);
-
-        ElNotification({
-          type: 'success',
-          message: '登录成功',
-          duration: 3000
-        });
+        // 存储用户Token
+        authUtil.setUserToken(res.data.token);
+        
+        proxy.$commonUtil.elNotify('登录成功');
 
         // 跳转到首页
-        router.replace('/');
+        // router.replace('/');
       })
       .catch(error => {
-        // console.log(error);
-
-        ElNotification({
-          type: 'warning',
-          message: error.response.data.msg || '请求失败',
-          duration: 3000
-        });
+        console.log('登录错误', error);
       })
       .finally(()=>{
         userLoginLoading.value = false;
