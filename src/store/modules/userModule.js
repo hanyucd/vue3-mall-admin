@@ -8,7 +8,7 @@ const mutationType = {
 
 const state = {
   userToken: authUtil.getUserToken(), // 用户token
-  userInfo: { _id: '11' }, // 用户信息
+  userInfo: {}, // 用户信息
 };
 
 const getters = {
@@ -50,9 +50,13 @@ const actions = {
    * 用户登出
    */
   userLogoutAction({ commit }) {
-    return new Promise(resolve => {
-      // commit('SET_USER_INFO', userInfoStorage.removeStorage());
-      resolve();
+    return new Promise((resolve, reject) => {
+      api.userLogout().then(res => {
+        commit(mutationType.SET_USER_TOKEN, '');
+        commit(mutationType.SET_USER_INFO, {});
+        resolve(res);
+      })
+      .catch(err => reject(err));
     });
   },
   /**
