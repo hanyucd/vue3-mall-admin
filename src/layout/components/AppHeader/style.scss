@@ -1,0 +1,17 @@
+.app-header-container {
+  @apply flex items-center h-full text-light-50;
+  .logo {
+    @apply flex justify-center items-center text-xl font-thin;
+    width: 250px;
+  }
+  .icon-btn {
+    @apply w-[42px] h-60px;
+    width: 42px;
+    &:hover {
+      @apply bg-indigo-600;
+    }
+  }
+  .el-dropdown-link {
+    @apply flex items-center text-light-50;
+  }
+}

@@ -8,7 +8,7 @@ export const constantRouterMap = [
     path: '/',
     name: 'IndexRoute',
     meta: { title: '后台首页' },
-    component: () => import('@/views/index/index.vue'),
+    component: () => import('@/layout/layout.vue'),
   },
   {
     path: '/login',
