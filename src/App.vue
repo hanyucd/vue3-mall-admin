@@ -15,6 +15,9 @@
 import HelloWorld from './components/HelloWorld.vue';
 </script>
 
-<style scoped>
+<style>
+#nprogress .bar {
+  background: #24edb2 !important;
+}
 </style>
 
