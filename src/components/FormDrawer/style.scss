@@ -1,0 +1,11 @@
+.form-drawer-body {
+  @apply flex flex-col;
+  height: 100%;
+  .form-drawer-main {
+    flex: 1;
+    overflow-y: auto;
+  }
+  .form-drawer-footer {
+    margin-top: 30px;
+  }
+}
