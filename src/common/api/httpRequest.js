@@ -1,4 +1,5 @@
 import axios from 'axios';
+import store from '@/store';
 import authUtil from '@/common/utils/authUtil';
 import * as commonUtil from '@/common/utils';
 
@@ -38,6 +39,10 @@ http.interceptors.response.use(response => {
   // 超出 2xx 范围的状态码都会触发该函数
   // console.log('错误', error);
   const msg = error?.response.data.msg || '请求失败';
+
+  if (msg == '非法token，请先登录！') {
+    store.dispatch('userModule/userLogoutAction').finally(() => location.reload());
+  }
   
   commonUtil.elNotify(msg, 'error');
   return Promise.reject(error);

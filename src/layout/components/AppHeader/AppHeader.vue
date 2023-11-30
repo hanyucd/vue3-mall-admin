@@ -38,32 +38,65 @@
         </div>
         <template #dropdown>
           <el-dropdown-menu>
-            <el-dropdown-item command="rePassword">修改密码</el-dropdown-item>
+            <el-dropdown-item command="modifPassword">修改密码</el-dropdown-item>
             <el-dropdown-item command="logout">退出登录</el-dropdown-item>
           </el-dropdown-menu>
         </template>
       </el-dropdown>
     </div>
   </div>
+
+  <!-- 表单Drawer -->
+  <FormDrawer ref="formDrawerRef" title="修改密码" destroy-on-close @formDrawerSubmitEvt="onFormDrawerSubmitEvt">
+    <div>
+      123
+      <div :style="{ height: '2000px', background: 'red' }">
+      </div>
+    </div>
+  </FormDrawer>
 </template>
 
 <script setup>
-import { computed } from 'vue';
+import FormDrawer from '@/components/FormDrawer/FormDrawer.vue';
+import { useFullscreen } from '@vueuse/core';
+import { useUserLogout } from '@/hooks/useUser';
+import { computed, ref } from 'vue';
 
+// 是否全屏
+const { isFullscreen, toggle } = useFullscreen();
 // eslint-disable-next-line no-constant-condition
 const menuText = computed(() => 1 ? '展开侧边栏' : '折叠侧边栏');
 
-const isFullscreen = false;
+const formDrawerRef = ref(null);
 
 /**
  * 刷新页面
  */
 const handleRefresh = () => location.reload();
+
+const onFormDrawerSubmitEvt = () => {
+  console.log('监听子组件事件');
+};
+
 /**
  * 点击菜单项触发的事件回调
  */
 const onDropdownItemCommandEvt = command => {
   console.log(command);
+
+  switch(command) {
+    case 'logout':
+      // useUserLogout();
+      console.log(useUserLogout());
+      break;
+    case 'modifPassword':
+      formDrawerRef.value.openFormDrawer();
+      formDrawerRef.value.showSubmitBtnLoading();
+      console.log(formDrawerRef.value);
+      break;
+    default:
+      break;
+  }
 };
 </script>
 

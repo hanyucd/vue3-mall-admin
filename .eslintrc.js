@@ -35,6 +35,7 @@ module.exports = {
     'vue/multi-word-component-names': 'off', // 关闭 组件名称始终是多个单词
     'semi': ['error', 'always'], // 强制在语句末尾使用分号
     'no-unused-vars': 'off', // 禁止使用未声明的变量
+    'vue/v-on-event-hyphenation': 'off', // 禁止对模板中的自定义组件强制执行 v-on 事件命名样式
     'quotes': ['error', 'single', { 'allowTemplateLiterals': true }], // 强制使用单引号 & 允许字符串使用反勾号
     // 空标签需要自闭合
     'vue/html-self-closing': [

@@ -8,7 +8,7 @@ const mutationType = {
 
 const state = {
   userToken: authUtil.getUserToken(), // 用户token
-  userInfo: {}, // 用户信息
+  userInfo: { id: 11 }, // 用户信息
 };
 
 const getters = {
@@ -32,7 +32,7 @@ const actions = {
    */
   userLoginAction({ commit }, { username, password }) {
     return new Promise((resolve, reject) => {
-      api.userLogin({ username, password }).then(res => {
+      api.userLoginApi({ username, password }).then(res => {
         const { data: loginedData } = res;
         console.log('登录结果：', loginedData);
         // 用户Token存储到 cookie
@@ -51,7 +51,7 @@ const actions = {
    */
   userLogoutAction({ commit }) {
     return new Promise((resolve, reject) => {
-      api.userLogout().then(res => {
+      api.userLogoutApi().then(res => {
         commit(mutationType.SET_USER_TOKEN, '');
         commit(mutationType.SET_USER_INFO, {});
         resolve(res);
@@ -64,7 +64,7 @@ const actions = {
    */
   // fetchUserInfoAction({ commit, state }) {
   //   return new Promise((resolve, reject) => {
-  //     api.fetchUserInfo()
+  //     api.fetchUserInfoApi()
   //       .then(res => {
   //         commit('SET_USER_PERMISSION_LIST', res.role.permissions);
   //         commit('SET_USER_INFO', res);
