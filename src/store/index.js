@@ -5,11 +5,16 @@ import userModule from './modules/userModule';
 const store = createStore({
   state () {
     return {
-      count: 0
+      isCollapseSidebarMenu: false, // 侧边栏是否折叠
     };
   },
   getters: {},
-  mutations: {},
+  mutations: {
+    // 切换展开/关闭侧边栏
+    'SWITCH_SIDEBAR_MENU_STATE'(state, ) {
+      state.isCollapseSidebarMenu = !state.isCollapseSidebarMenu;
+    },
+  },
   actions: {},
   modules: {
     userModule,

@@ -1,6 +1,7 @@
 .slidebar-menu {
-  // @apply shadow-md;
   height: 100%;
+  transition: all 0.3s;
+  overflow: hidden;
   .el-menu-vertical {
     height: 100%;
     border: none;

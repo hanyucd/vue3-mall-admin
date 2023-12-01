@@ -9,8 +9,11 @@
 
     <div class="flex items-center">
       <!-- 折叠 -->
-      <el-tooltip effect="dark" :content="menuText" placement="bottom">
-        <el-icon class="icon-btn" @click="toggleMenu"><Fold /></el-icon>
+      <el-tooltip effect="dark" :content="collapseMenuTooltipText" placement="bottom">
+        <el-icon class="icon-btn" @click="$store.commit('SWITCH_SIDEBAR_MENU_STATE')">
+          <Fold v-if="!$store.state.isCollapseSidebarMenu" />
+          <Expand v-else />
+        </el-icon>
       </el-tooltip>
       <!-- 刷新 -->
       <el-tooltip effect="dark" content="刷新" placement="bottom">
@@ -65,10 +68,12 @@
 <script setup>
 import FormDrawer from '@/components/FormDrawer/FormDrawer.vue';
 import { useFullscreen } from '@vueuse/core';
+import { useStore } from 'vuex';
 // import { useUserLogoutHook } from '@/hooks/useUserHook';
 import * as useUserHook from '@/hooks/useUserHook';
 import { computed, ref, reactive } from 'vue';
 
+const store = useStore();
 // 退出登录 hook
 const { handleLogout } = useUserHook.useUserLogoutHook();
 // 修改密码 hook
@@ -77,8 +82,8 @@ const { passwordForm, passwordRules, formRef, formDrawerRef, onFormDrawerSubmitE
 
 // 是否全屏
 const { isFullscreen, toggle } = useFullscreen();
-// eslint-disable-next-line no-constant-condition
-const menuText = computed(() => 1 ? '展开侧边栏' : '折叠侧边栏');
+// 折叠菜单 tooltip 文本
+const collapseMenuTooltipText = computed(() => store.state.isCollapseSidebarMenu ? '展开侧边栏' : '折叠侧边栏');
 
 /**
  * 刷新页面

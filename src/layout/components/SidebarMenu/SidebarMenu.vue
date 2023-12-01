@@ -1,8 +1,11 @@
 <template>
-  <div class="slidebar-menu">
+  <div class="slidebar-menu" :style="{ width: $store.state.isCollapseSidebarMenu ? '64px' : '250px' }">
     <el-menu
       default-active="2"
       class="el-menu-vertical"
+      :collapse="isCollapseMenu"
+      :collapse-transition="false"
+      unique-opened
     >
       <el-sub-menu index="1">
         <template #title>
@@ -41,6 +44,12 @@
 </template>
 
 <script setup>
+import { ref, computed } from 'vue';
+import { useStore } from 'vuex';
+
+const store = useStore();
+// 是否折叠菜单
+const isCollapseMenu = computed(() => store.state.isCollapseSidebarMenu);
 </script>
 
 <style lang="scss" scoped>
