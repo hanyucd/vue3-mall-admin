@@ -28,6 +28,4 @@ app.use(store);
 app.mount('#app');
 
 // createApp(App).mount('#app')
-// console.log(import.meta.env);
-// console.log(app);
 

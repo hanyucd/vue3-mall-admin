@@ -1,0 +1,10 @@
+.slidebar-menu {
+  // @apply shadow-md;
+  height: 100%;
+  .el-menu-vertical {
+    height: 100%;
+    border: none;
+    padding-bottom: 20px;
+    // overflow-y: auto;
+  }
+}

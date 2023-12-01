@@ -77,26 +77,26 @@ export const useModifPasswordHook = () => {
    */
   function onFormDrawerSubmitEvt() {
     formRef.value.validate((valid) => {
-        if (!valid) return false;
-        // 显示提交按钮 loading
-        formDrawerRef.value.showSubmitBtnLoading();
+      if (!valid) return false;
+      // 显示提交按钮 loading
+      formDrawerRef.value.showSubmitBtnLoading();
 
-        store.dispatch('userModule/updateUserPasswordAction', passwordForm)
-          .then(res => {
-             console.log(res);
+      store.dispatch('userModule/updateUserPasswordAction', passwordForm)
+        .then(res => {
+          console.log(res);
 
-             // 关闭表单抽屉
-             formDrawerRef.value.closeFormDrawer();
-             commonUtil.elNotify('密码修改成功,请重新登录!');
-             store.dispatch('userModule/userLogoutAction');
-          })
-          .then(res => {
-            router.push('/login');
-          })
-          .finally(() => {
-            // 隐藏loading
-            formDrawerRef.value.hideSubmitBtnLoading();
-          });
+          // 关闭表单抽屉
+          formDrawerRef.value.closeFormDrawer();
+          commonUtil.elNotify('密码修改成功,请重新登录!');
+          store.dispatch('userModule/userLogoutAction');
+      })
+      .then(res => {
+        router.push('/login');
+      })
+      .finally(() => {
+        // 隐藏loading
+        formDrawerRef.value.hideSubmitBtnLoading();
+      });
     });
   }
 

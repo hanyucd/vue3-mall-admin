@@ -1,12 +1,12 @@
 <template>
-  <el-container>
+  <el-container class="layout">
     <el-header>
       <AppHeader />
     </el-header>
     
     <el-container>
       <el-aside>
-        侧边栏
+        <SidebarMenu />
       </el-aside>
       <el-main>主要内容</el-main>
     </el-container>
@@ -15,6 +15,7 @@
 
 <script setup>
 import AppHeader from './components/AppHeader/AppHeader.vue';
+import SidebarMenu from './components/SidebarMenu/SidebarMenu.vue';
 </script>
 
 <style lang="scss" scoped>

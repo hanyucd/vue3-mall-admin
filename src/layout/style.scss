@@ -1,3 +1,12 @@
-.el-header {
-  @apply bg-indigo-700;
+.layout {
+  height: 100vh;
+  .el-header {
+    @apply bg-indigo-700;
+  }
+  .el-aside {
+    @apply shadow-md;
+    width: auto;
+    max-width: 300px;
+  }
 }
+

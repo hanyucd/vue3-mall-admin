@@ -8,11 +8,9 @@ const store = createStore({
       count: 0
     };
   },
-  mutations: {
-    increment (state) {
-      state.count++;
-    }
-  },
+  getters: {},
+  mutations: {},
+  actions: {},
   modules: {
     userModule,
     // permissionModule

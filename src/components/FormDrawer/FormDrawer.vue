@@ -38,7 +38,7 @@ const showSubmitBtnLoading = () => submitBtnLoading.value = true;
 const hideSubmitBtnLoading = () => submitBtnLoading.value = false;
 
 /**
- * 确定提交
+ * 确定提交 事件
  */
 const submitEvt = () => emit('formDrawerSubmitEvt');
 
