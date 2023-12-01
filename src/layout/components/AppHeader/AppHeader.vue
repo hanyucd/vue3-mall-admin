@@ -47,52 +47,54 @@
   </div>
 
   <!-- 表单Drawer -->
-  <FormDrawer ref="formDrawerRef" title="修改密码" destroy-on-close @formDrawerSubmitEvt="onFormDrawerSubmitEvt">
-    <div>
-      123
-      <div :style="{ height: '2000px', background: 'red' }">
-      </div>
-    </div>
+  <FormDrawer ref="formDrawerRef" title="修改密码" destroy-on-close @formDrawerSubmitEvt="onFormDrawerSubmitEvt" @formDrawerCloseEvt="onFormDrawerCloseEvt">
+    <el-form ref="formRef" :model="passwordForm" :rules="passwordRules" label-width="80px" size="large" class="flex flex-col min-h-full">
+      <el-form-item prop="oldpassword" label="旧密码">
+        <el-input v-model="passwordForm.oldpassword" size="large" show-password placeholder="请输入旧密码" />
+      </el-form-item>
+      <el-form-item prop="password" label="新密码">
+        <el-input v-model="passwordForm.password" size="large" show-password placeholder="请输入密码" />
+      </el-form-item>
+      <el-form-item prop="repassword" label="确认密码">
+        <el-input v-model="passwordForm.repassword" size="large" show-password placeholder="请输入确认密码" />
+      </el-form-item>
+    </el-form>
   </FormDrawer>
 </template>
 
 <script setup>
 import FormDrawer from '@/components/FormDrawer/FormDrawer.vue';
 import { useFullscreen } from '@vueuse/core';
-import { useUserLogout } from '@/hooks/useUser';
-import { computed, ref } from 'vue';
+// import { useUserLogoutHook } from '@/hooks/useUserHook';
+import * as useUserHook from '@/hooks/useUserHook';
+import { computed, ref, reactive } from 'vue';
+
+// 退出登录 hook
+const { handleLogout } = useUserHook.useUserLogoutHook();
+// 修改密码 hook
+// const modifPasswordHook = useUserHook.useModifPasswordHook();
+const { passwordForm, passwordRules, formRef, formDrawerRef, onFormDrawerSubmitEvt, onFormDrawerCloseEvt } = useUserHook.useModifPasswordHook();
 
 // 是否全屏
 const { isFullscreen, toggle } = useFullscreen();
 // eslint-disable-next-line no-constant-condition
 const menuText = computed(() => 1 ? '展开侧边栏' : '折叠侧边栏');
 
-const formDrawerRef = ref(null);
-
 /**
  * 刷新页面
  */
 const handleRefresh = () => location.reload();
 
-const onFormDrawerSubmitEvt = () => {
-  console.log('监听子组件事件');
-};
-
 /**
  * 点击菜单项触发的事件回调
  */
 const onDropdownItemCommandEvt = command => {
-  console.log(command);
-
   switch(command) {
     case 'logout':
-      // useUserLogout();
-      console.log(useUserLogout());
+      handleLogout();
       break;
     case 'modifPassword':
       formDrawerRef.value.openFormDrawer();
-      formDrawerRef.value.showSubmitBtnLoading();
-      console.log(formDrawerRef.value);
       break;
     default:
       break;

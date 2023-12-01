@@ -41,7 +41,9 @@ http.interceptors.response.use(response => {
   const msg = error?.response.data.msg || '请求失败';
 
   if (msg == '非法token，请先登录！') {
-    store.dispatch('userModule/userLogoutAction').finally(() => location.reload());
+    store.commit('userModule/CLEAR_USER_DATA');
+    location.reload();
+    // store.dispatch('userModule/userLogoutAction').finally(() => location.reload());
   }
   
   commonUtil.elNotify(msg, 'error');

@@ -1,5 +1,5 @@
 <template>
-  <el-drawer v-model="isShowDrawer" :title="title" :destroy-on-close="destroyOnClose">
+  <el-drawer v-model="isShowDrawer" :title="title" :destroy-on-close="destroyOnClose" @close="onElDrawerCloseEvt">
     <div class="form-drawer-body">
       <div class="form-drawer-main">
         <slot></slot>
@@ -7,7 +7,7 @@
 
       <div class="form-drawer-footer">
         <el-button type="primary" size="large" class="w-[120px]" :loading="submitBtnLoading" @click="submitEvt">{{ confirmText }}</el-button>
-        <el-button type="warning" size="large" class="w-[120px]">取 消</el-button>
+        <el-button type="warning" size="large" class="w-[120px]" @click="closeFormDrawer">取 消</el-button>
       </div>
     </div>
   </el-drawer>
@@ -23,9 +23,9 @@ defineProps({
   destroyOnClose: { type: Boolean, default: false }
 });
 
-const emit = defineEmits(['formDrawerSubmitEvt']);
+const emit = defineEmits(['formDrawerSubmitEvt', 'formDrawerCloseEvt']);
 
-const isShowDrawer = ref(true); // 是否显示 drawer
+const isShowDrawer = ref(false); // 是否显示 drawer
 const submitBtnLoading = ref(false); // 提交按钮 loading
 
 /**
@@ -43,6 +43,10 @@ const hideSubmitBtnLoading = () => submitBtnLoading.value = false;
 const submitEvt = () => emit('formDrawerSubmitEvt');
 
 /**
+ * 监听 el-drawer close 事件
+ */
+const onElDrawerCloseEvt = () => emit('formDrawerCloseEvt');
+/**
  * 打开 drawer
  */
 const openFormDrawer = () => isShowDrawer.value = true;
@@ -55,7 +59,7 @@ const openFormDrawer = () => isShowDrawer.value = true;
  };
 
 //  向父级暴露一下方法
- defineExpose({
+defineExpose({
   openFormDrawer,
   closeFormDrawer,
   showSubmitBtnLoading,

@@ -4,6 +4,7 @@ import authUtil from '@/common/utils/authUtil';
 const mutationType = {
   SET_USER_INFO: 'SET_USER_INFO',
   SET_USER_TOKEN: 'SET_USER_TOKEN',
+  CLEAR_USER_DATA: 'CLEAR_USER_DATA'
 };
 
 const state = {
@@ -23,6 +24,13 @@ const mutations = {
   // 设置 用户信息
   [mutationType.SET_USER_INFO]: (state, userInfo) => {
     state.userInfo = userInfo;
+  },
+  // 清除 信息
+  [mutationType.CLEAR_USER_DATA]: (state) => {
+    state.userToken = '';
+    state.userInfo = {};
+    // 清除 cookies中的 token
+    authUtil.removeToken();
   },
 };
 
@@ -52,13 +60,27 @@ const actions = {
   userLogoutAction({ commit }) {
     return new Promise((resolve, reject) => {
       api.userLogoutApi().then(res => {
-        commit(mutationType.SET_USER_TOKEN, '');
-        commit(mutationType.SET_USER_INFO, {});
+        // commit(mutationType.SET_USER_TOKEN, '');
+        // commit(mutationType.SET_USER_INFO, {});
+        commit(mutationType.CLEAR_USER_DATA);
         resolve(res);
       })
       .catch(err => reject(err));
     });
   },
+  /**
+   * 更新用户密码
+   */
+  updateUserPasswordAction({ commit }, { oldpassword, password, repassword }) {
+    return new Promise((resolve, reject) => {
+      api.updateUserPasswordApi({ oldpassword, password, repassword }).then(res => {
+        resolve(res);
+      }).catch(error => {
+        console.log(error);
+        reject(error);
+      });
+    });
+  }
   /**
    * 拉取用户信息
    */

@@ -28,9 +28,9 @@ router.beforeEach((to, from, next) => {
     // console.log('用户token', userToken);
     // 防止重复登录
     if (to.path === loginRoutePath) {
-      // next({ path: '/' });
-      // commonUtil.elNotify('请勿重复登录', 'warning');
+      commonUtil.elNotify('请勿重复登录', 'warning');
       next({ path: from.path ? from.path : '/' });
+      // next({ path: '/' });
     } else {
       next();
     }

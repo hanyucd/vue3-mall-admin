@@ -45,7 +45,6 @@
 import { reactive, ref, getCurrentInstance, onMounted, onBeforeUnmount } from 'vue';
 import { useRouter } from 'vue-router';
 import { useStore } from 'vuex';
-import authUtil from '@/common/utils/authUtil';
 
 const router = useRouter();
 const store = useStore();
