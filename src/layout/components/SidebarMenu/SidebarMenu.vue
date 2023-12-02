@@ -6,6 +6,7 @@
       :collapse="$store.state.isCollapseSidebarMenu"
       :collapse-transition="false"
       unique-opened
+      @select="onSidebarMenuSelectEvt"
     >
       <template v-for="(item, index) in menuList" :key="index">
         <!-- 含有二级菜单 -->
@@ -24,6 +25,7 @@
             <span>{{ twoItem.name }}</span>
           </el-menu-item>
         </el-sub-menu>
+        
         <!-- 一级菜单 | 不含二级菜单 -->
         <el-menu-item v-else :index="item.frontpath">
           <el-icon>
@@ -42,10 +44,19 @@ import { useRouter, useRoute } from 'vue-router';
 import { useStore } from 'vuex';
 
 const store = useStore();
+const router = useRouter();
 const route = useRoute();
 
 // 侧边栏菜单列表
-const menuList = computed(() => store.state.userModule.sidebarMenuList);
+// const menuList = computed(() => store.state.userModule.sidebarMenuList);
+const menuList = computed(() => store.getters['userModule/sidebarMenuList']);
+
+/**
+ * 路由跳转
+ */
+const onSidebarMenuSelectEvt = (menuItemindex, indexPath, item, routeResult) => {
+  router.push({ path: menuItemindex });
+};
 </script>
 
 <style lang="scss" scoped>

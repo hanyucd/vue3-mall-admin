@@ -10,13 +10,14 @@ const mutationType = {
 
 const state = {
   userToken: authUtil.getUserToken(), // 用户token
-  userInfo: { id: 11 }, // 用户信息
+  userInfo: {}, // 用户信息
   sidebarMenuList: [], // 侧边栏菜单列表
   // ruleNames: [], // 侧边栏菜单列表
 };
 
 const getters = {
-  userId: state => state.userInfo?._id || '', // 用户 id
+  userId: state => state.userInfo?.id || '', // 用户 id
+  sidebarMenuList: state => state.userInfo?.menus || []
 };
 
 const mutations = {
@@ -29,9 +30,9 @@ const mutations = {
     state.userInfo = _userInfo;
   },
   // 设置 侧边栏菜单
-  [mutationType.SET_SIDEBAR_MENU]: (state, _menu) => {
-    state.sidebarMenuList = _menu;
-  },
+  // [mutationType.SET_SIDEBAR_MENU]: (state, _menu) => {
+  //   state.sidebarMenuList = _menu;
+  // },
   // 清除 信息
   [mutationType.CLEAR_USER_DATA]: (state) => {
     state.userToken = '';
@@ -94,10 +95,9 @@ const actions = {
     return new Promise((resolve, reject) => {
       api.fetchUserInfoApi()
         .then(res => {
-          console.log(res);
           const { data: userInfoData } = res;
           commit(mutationType.SET_USER_INFO, userInfoData);
-          commit(mutationType.SET_SIDEBAR_MENU, userInfoData.menus);
+          // commit(mutationType.SET_SIDEBAR_MENU, userInfoData.menus);
 
           resolve(userInfoData);
         })
@@ -107,6 +107,5 @@ const actions = {
     });
   }
 };
-
 
 export default { namespaced: true, state, getters, mutations, actions };

@@ -32,8 +32,10 @@ router.beforeEach((to, from, next) => {
       next({ path: from.path ? from.path : '/' });
       // next({ path: '/' });
     } else {
-      if (!store.state.userModule.sidebarMenuList.length) {
-        store.dispatch('userModule/fetchUserInfoAction');
+      if (!store.getters['userModule/sidebarMenuList'].length) {
+        store.dispatch('userModule/fetchUserInfoAction').then(res => {
+          console.log(res);
+        });
       }
       next();
     }
@@ -57,3 +59,15 @@ router.beforeEach((to, from, next) => {
 router.afterEach((to, from) => {
   NProgress.done();
 });
+
+// console.log(router);
+
+/**
+ * 
+ * 动态添加路由的方法
+ */
+const _generateAsyncRoutes = menuList => {
+  console.log(menuList);
+  // menuList.forEach()
+  
+};
