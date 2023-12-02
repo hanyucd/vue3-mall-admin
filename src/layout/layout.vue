@@ -9,7 +9,8 @@
         <SidebarMenu />
       </el-aside>
       <el-main>
-        主要内容
+        <NavTagGroup />
+        
         <router-view />
       </el-main>
     </el-container>
@@ -19,6 +20,7 @@
 <script setup>
 import AppHeader from './components/AppHeader/AppHeader.vue';
 import SidebarMenu from './components/SidebarMenu/SidebarMenu.vue';
+import NavTagGroup from './components/NavTagGroup/NavTagGroup.vue';
 </script>
 
 <style lang="scss" scoped>

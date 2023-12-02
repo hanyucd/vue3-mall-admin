@@ -5,6 +5,7 @@
       class="el-menu-vertical"
       :collapse="$store.state.isCollapseSidebarMenu"
       :collapse-transition="false"
+      active-text-color="#6366f1"
       unique-opened
       @select="onSidebarMenuSelectEvt"
     >
@@ -45,7 +46,6 @@ import { useStore } from 'vuex';
 
 const store = useStore();
 const router = useRouter();
-const route = useRoute();
 
 // 侧边栏菜单列表
 // const menuList = computed(() => store.state.userModule.sidebarMenuList);
@@ -57,16 +57,6 @@ const menuList = computed(() => store.getters['userModule/sidebarMenuList']);
 const onSidebarMenuSelectEvt = (menuItemindex, indexPath, item, routeResult) => {
   router.push({ path: menuItemindex });
 };
-
-// console.log('所有路由列表A：', router.getRoutes());
-
-// router.addRoute('loginRoute', {
-//   path: '/goods/list',
-//   meta: { title: '商品管理' },
-//   component: () => import('@/views/module-goods/goods-manage/goods-manage.vue')
-// });
-
-// console.log('所有路由列表：', router.getRoutes());
 </script>
 
 <style lang="scss" scoped>

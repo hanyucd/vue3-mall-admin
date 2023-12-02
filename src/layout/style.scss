@@ -8,5 +8,11 @@
     width: auto;
     max-width: 300px;
   }
+  .el-main {
+    @apply bg-light-200;
+    // display: flex;
+    // flex-direction: column;
+    // overflow: hidden;
+  }
 }
 
