@@ -8,7 +8,10 @@
       <el-aside>
         <SidebarMenu />
       </el-aside>
-      <el-main>主要内容</el-main>
+      <el-main>
+        主要内容
+        <router-view />
+      </el-main>
     </el-container>
   </el-container>
 </template>

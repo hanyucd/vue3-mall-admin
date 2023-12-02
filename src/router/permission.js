@@ -1,4 +1,5 @@
 import router from '@/router';
+import { asyncRouterMap } from '@/router/routes';
 import store from '@/store';
 import authUtil from '@/common/utils/authUtil';
 import * as commonUtil from '@/common/utils';
@@ -25,29 +26,31 @@ router.beforeEach((to, from, next) => {
   const userToken = store.state.userModule.userToken;
 
   if (userToken) {
-    // console.log('用户token', userToken);
     // 防止重复登录
     if (to.path === loginRoutePath) {
       commonUtil.elNotify('请勿重复登录', 'warning');
       next({ path: from.path ? from.path : '/' });
-      // next({ path: '/' });
     } else {
+      // 如果 vuex 中不存在侧边栏菜单列表
       if (!store.getters['userModule/sidebarMenuList'].length) {
+        // 拉取用户信息 获取用户信息的菜单列表
         store.dispatch('userModule/fetchUserInfoAction').then(res => {
-          console.log(res);
+          // 动态添加路由
+          _addAsyncRouteFunc(res.menus);
+          // console.log('所有路由列表：', router.getRoutes());
+          next(to.fullPath);
         });
+      } else {
+        next();
       }
-      next();
     }
   } else {
     // 在免登录路由名单，直接进入
     if (whiteRouteList.includes(to.name)) {
-      // console.log('白名单路由');
       next();
     } else {
       // 无 token 情况下则进入登录页面
       next({ path: loginRoutePath, query: { redirect: to.fullPath } });
-      // console.log('无 token');
       // NProgress.done();
     }
   }
@@ -60,14 +63,20 @@ router.afterEach((to, from) => {
   NProgress.done();
 });
 
-// console.log(router);
-
 /**
- * 
  * 动态添加路由的方法
  */
-const _generateAsyncRoutes = menuList => {
-  console.log(menuList);
-  // menuList.forEach()
-  
+const _addAsyncRouteFunc = menuList => {
+  menuList.forEach(menuItem => {
+    let _findRouteItem = asyncRouterMap.find(routeItem => routeItem.path === menuItem.frontpath);
+
+    if (_findRouteItem) {
+      // 动态添加子路由
+      router.addRoute('layoutRoute', _findRouteItem);
+    }
+
+    if (menuItem.child && menuItem.child.length) {
+      _addAsyncRouteFunc(menuItem.child);
+    }
+  });
 };
