@@ -32,6 +32,9 @@ router.beforeEach((to, from, next) => {
       next({ path: from.path ? from.path : '/' });
       // next({ path: '/' });
     } else {
+      if (!store.state.userModule.sidebarMenuList.length) {
+        store.dispatch('userModule/fetchUserInfoAction');
+      }
       next();
     }
   } else {

@@ -3,53 +3,49 @@
     <el-menu
       default-active="2"
       class="el-menu-vertical"
-      :collapse="isCollapseMenu"
+      :collapse="$store.state.isCollapseSidebarMenu"
       :collapse-transition="false"
       unique-opened
     >
-      <el-sub-menu index="1">
-        <template #title>
-          <el-icon><location /></el-icon>
-          <span>Navigator One</span>
-        </template>
-        <el-menu-item-group title="Group One">
-          <el-menu-item index="1-1">item one</el-menu-item>
-          <el-menu-item index="1-2">item two</el-menu-item>
-        </el-menu-item-group>
-        <el-menu-item-group title="Group Two">
-          <el-menu-item index="1-3">item three</el-menu-item>
-        </el-menu-item-group>
-        <el-sub-menu index="1-4">
-          <template #title>item four</template>
-          <el-menu-item index="1-4-1">item one</el-menu-item>
+      <template v-for="(item, index) in menuList" :key="index">
+        <!-- 含有二级菜单 -->
+        <el-sub-menu v-if="item.child && item.child.length > 0" :index="item.name">
+          <template #title>
+            <el-icon>
+              <component :is="item.icon" />
+            </el-icon>
+            <span>{{ item.name }}</span>
+          </template>
+          <!-- 二级菜单项 -->
+          <el-menu-item v-for="(twoItem, twoIndex) in item.child" :key="twoIndex" :index="twoItem.frontpath">
+            <el-icon>
+              <component :is="twoItem.icon" />
+            </el-icon>
+            <span>{{ twoItem.name }}</span>
+          </el-menu-item>
         </el-sub-menu>
-      </el-sub-menu>
-
-      <el-menu-item index="2">
-        <el-icon><icon-menu /></el-icon>
-        <span>Navigator Two</span>
-      </el-menu-item>
-
-      <el-menu-item index="3" disabled>
-        <el-icon><document /></el-icon>
-        <span>Navigator Three</span>
-      </el-menu-item>
-
-      <el-menu-item index="4">
-        <el-icon><setting /></el-icon>
-        <span>Navigator Four</span>
-      </el-menu-item>
+        <!-- 一级菜单 | 不含二级菜单 -->
+        <el-menu-item v-else :index="item.frontpath">
+          <el-icon>
+            <component :is="item.icon" />
+          </el-icon>
+          <span>{{ item.name }}</span>
+        </el-menu-item>
+      </template>
     </el-menu>
   </div>
 </template>
 
 <script setup>
 import { ref, computed } from 'vue';
+import { useRouter, useRoute } from 'vue-router';
 import { useStore } from 'vuex';
 
 const store = useStore();
-// 是否折叠菜单
-const isCollapseMenu = computed(() => store.state.isCollapseSidebarMenu);
+const route = useRoute();
+
+// 侧边栏菜单列表
+const menuList = computed(() => store.state.userModule.sidebarMenuList);
 </script>
 
 <style lang="scss" scoped>
