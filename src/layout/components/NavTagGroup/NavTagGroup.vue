@@ -1,6 +1,6 @@
 <template>
   <div class="nav-tag-group">
-    <el-tabs v-model="activeNavTagTab" type="card" class="tag-tabs" @tab-change="onNavTagTabChangeEvt" @tab-remove="onNavTagTabRemoveEvt">
+    <el-tabs v-model="activeNavTagTab" type="card" class="tag-tabs" style="min-width: 100px;" @tab-change="onNavTagTabChangeEvt" @tab-remove="onNavTagTabRemoveEvt">
       <el-tab-pane v-for="item in navTagTabList" :key="item.path" :label="item.title" :name="item.path" :closable="item.path != '/'">
         {{ item.content }}
       </el-tab-pane>

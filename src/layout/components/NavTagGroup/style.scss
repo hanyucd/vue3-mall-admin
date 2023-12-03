@@ -15,6 +15,16 @@
       height: 32px;
       line-height: 32px;
     }
+    // &:deep(.el-tabs__nav-wrap.is-scrollable) {
+    //   padding: 0 30px;
+    // }
+    // &:deep(.el-tabs__nav-next), :deep(.el-tabs__nav-prev) {
+    //     line-height: 35px;
+    // }
+    // &:deep(.is-disabled) {
+    //     cursor: not-allowed;
+    //     @apply text-gray-300;
+    // }
   }
   .el-dropdown-div {
     width: 32px;

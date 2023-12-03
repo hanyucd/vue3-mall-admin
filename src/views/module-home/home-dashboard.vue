@@ -50,15 +50,27 @@
     </el-row>
 
     <NavCardList />
+
+    <el-row :gutter="20" class="mt-5">
+      <el-col :span="12" :offset="0">
+        <OrderChart />
+      </el-col>
+      <el-col :span="12" :offset="0">
+        商品信息
+        <!-- <index-card title="店铺及商品提示" tip="店铺及商品提示" :res-data="goodsData" /> -->
+        <!-- <index-card class=" mt-4" title="交易提示" tip="需要立即处理的订单" :res-data="orderData" /> -->
+      </el-col>
+    </el-row>
   </div>
 </template>
 
 <script setup>
 import NumCountTo from '@/components/NumCountTo/NumCountTo.vue';
 import NavCardList from './components/NavCardList/NavCardList.vue';
+import OrderChart from './components/OrderChart/OrderChart.vue';
 import { ref, getCurrentInstance } from 'vue';
-const { proxy } = getCurrentInstance();
 
+const { proxy } = getCurrentInstance();
 // 面板数据
 const panelsDataList = ref([]);
 
