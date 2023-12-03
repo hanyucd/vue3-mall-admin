@@ -31,7 +31,7 @@ export const constantRouterMap = [
 export const asyncRouterMap = [
   {
     path: '/',
-    meta: { title: '首页' },
+    meta: { title: '主控台' },
     component: () => import('@/views/module-home/home-dashboard/home-dashboard.vue')
   },
   {

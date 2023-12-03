@@ -1,12 +1,12 @@
 <template>
   <div class="slidebar-menu" :style="{ width: $store.state.isCollapseSidebarMenu ? '64px' : '250px' }">
     <el-menu
-      default-active="2"
       class="el-menu-vertical"
+      :default-active="$route.path"
       :collapse="$store.state.isCollapseSidebarMenu"
       :collapse-transition="false"
-      active-text-color="#6366f1"
       unique-opened
+      active-text-color="#6366f1"
       @select="onSidebarMenuSelectEvt"
     >
       <template v-for="(item, index) in menuList" :key="index">
@@ -48,7 +48,6 @@ const store = useStore();
 const router = useRouter();
 
 // 侧边栏菜单列表
-// const menuList = computed(() => store.state.userModule.sidebarMenuList);
 const menuList = computed(() => store.getters['userModule/sidebarMenuList']);
 
 /**
