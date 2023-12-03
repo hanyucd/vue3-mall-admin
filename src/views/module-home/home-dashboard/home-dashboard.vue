@@ -24,6 +24,7 @@
           </el-skeleton>
         </el-col>
       </template>
+      
       <!-- 面板数据 -->
       <el-col v-for="(item, index) in panelsDataList" :key="index" :span="6" :offset="0">
         <el-card shadow="hover" class="border-0">
@@ -36,8 +37,8 @@
           </template>
           <!-- card body -->
           <span class="text-3xl font-bold text-gray-600">
-            {{ item.value }}
-            <!-- <count-to :value="item.value" /> -->
+            <!-- {{ item.value }} -->
+            <NumCountTo :value="item.value" />
           </span>
           <el-divider />
           <div class="flex items-center justify-between text-sm text-gray-500">
@@ -51,6 +52,7 @@
 </template>
 
 <script setup>
+import NumCountTo from '@/components/NumCountTo/NumCountTo.vue';
 import { ref, getCurrentInstance } from 'vue';
 const { proxy } = getCurrentInstance();
 
