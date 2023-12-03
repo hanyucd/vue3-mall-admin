@@ -48,11 +48,14 @@
         </el-card>
       </el-col>
     </el-row>
+
+    <NavCardList />
   </div>
 </template>
 
 <script setup>
 import NumCountTo from '@/components/NumCountTo/NumCountTo.vue';
+import NavCardList from './components/NavCardList/NavCardList.vue';
 import { ref, getCurrentInstance } from 'vue';
 const { proxy } = getCurrentInstance();
 
