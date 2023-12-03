@@ -1,5 +1,6 @@
 .nav-tag-group {
   @apply flex;
+  margin-bottom: 15px;
   .tag-tabs {
     flex: 1;
     &:deep(.el-tabs__header) {

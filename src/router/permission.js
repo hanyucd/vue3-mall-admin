@@ -74,7 +74,7 @@ const _addAsyncRouteFunc = menuList => {
       // 动态添加子路由
       router.addRoute('layoutRoute', _findRouteItem);
     }
-
+    // 递归调取自身
     if (menuItem.child && menuItem.child.length) {
       _addAsyncRouteFunc(menuItem.child);
     }

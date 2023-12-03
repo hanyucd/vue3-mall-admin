@@ -1,17 +1,27 @@
 <template>
   <el-container class="layout">
+    <!-- 头部 -->
     <el-header>
       <AppHeader />
     </el-header>
     
     <el-container>
+      <!-- 侧边栏 -->
       <el-aside>
         <SidebarMenu />
       </el-aside>
       <el-main>
+        <!-- 导航标签组 -->
         <NavTagGroup />
-        
-        <router-view />
+
+        <!-- 内容 -->
+        <router-view v-slot="{ Component }">
+          <Transition name="fade" mode="out-in">
+            <keep-alive :max="10">
+              <component :is="Component" />
+            </keep-alive>
+          </Transition>
+        </router-view>
       </el-main>
     </el-container>
   </el-container>
