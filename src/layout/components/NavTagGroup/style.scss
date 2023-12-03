@@ -1,3 +1,28 @@
 .nav-tag-group {
-  
+  @apply flex;
+  .tag-tabs {
+    flex: 1;
+    &:deep(.el-tabs__header) {
+      margin: 0;
+    }
+    &:deep(.el-tabs__nav) {
+      border: 0;
+    }
+    &:deep(.el-tabs__item) {
+      @apply bg-white mx-1 rounded;
+      border: 0;
+      height: 32px;
+      line-height: 32px;
+    }
+  }
+  .el-dropdown-div {
+    width: 32px;
+    height: 32px;
+    margin-left: 10px;
+    flex-shrink: 0;
+    @apply flex items-center justify-center bg-white text-center rounded;
+    .el-dropdown {
+      margin-top: 3px;
+    }
+  }
 }

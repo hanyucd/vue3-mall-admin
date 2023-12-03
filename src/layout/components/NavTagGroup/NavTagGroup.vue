@@ -3,19 +3,27 @@
     <el-tabs
       v-model="editableTabsValue"
       type="card"
-      editable
-      class="demo-tabs"
+      class="tag-tabs"
       @edit="handleTabsEdit"
     >
-      <el-tab-pane
-        v-for="item in editableTabs"
-        :key="item.name"
-        :label="item.title"
-        :name="item.name"
-      >
+      <el-tab-pane v-for="item in editableTabs" :key="item.name" :label="item.title" :name="item.name">
         {{ item.content }}
       </el-tab-pane>
     </el-tabs>
+
+    <div class="el-dropdown-div">
+      <el-dropdown @command="handleClose">
+        <span class="el-dropdown-link">
+          <el-icon><ArrowDown /></el-icon>
+        </span>
+        <template #dropdown>
+          <el-dropdown-menu>
+            <el-dropdown-item command="clearOther">关闭其他</el-dropdown-item>
+            <el-dropdown-item command="clearAll">关闭所有</el-dropdown-item>
+          </el-dropdown-menu>
+        </template>
+      </el-dropdown>
+    </div>
   </div>
 </template>
 
@@ -35,6 +43,9 @@ const editableTabs = ref([
     content: 'Tab 2 content',
   },
 ]);
+
+
+const handleClose = (commond) => { console.log(commond); };
 </script>
 
 <style lang="scss" scoped>
