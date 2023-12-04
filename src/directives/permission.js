@@ -8,9 +8,6 @@ const _hasPermission = (value, el = false) => {
   if (el && !hasAuth) {
     el.parentNode && el.parentNode.removeChild(el);
   }
-  // console.log(value);
-  // console.log(el);
-  // console.log(hasAuth);
 
   return hasAuth;
 };
