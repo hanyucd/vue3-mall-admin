@@ -56,9 +56,8 @@
         <OrderChart />
       </el-col>
       <el-col :span="12" :offset="0">
-        商品信息
-        <!-- <index-card title="店铺及商品提示" tip="店铺及商品提示" :res-data="goodsData" /> -->
-        <!-- <index-card class=" mt-4" title="交易提示" tip="需要立即处理的订单" :res-data="orderData" /> -->
+        <RemindCard title="店铺及商品提示" tip="店铺及商品提示" :resData="goodsDataList" />
+        <RemindCard class=" mt-4" title="交易提示" tip="需要立即处理的订单" :resData="orderDataList" />
       </el-col>
     </el-row>
   </div>
@@ -68,16 +67,28 @@
 import NumCountTo from '@/components/NumCountTo/NumCountTo.vue';
 import NavCardList from './components/NavCardList/NavCardList.vue';
 import OrderChart from './components/OrderChart/OrderChart.vue';
+import RemindCard from './components/RemindCard/RemindCard.vue';
 import { ref, getCurrentInstance } from 'vue';
 
 const { proxy } = getCurrentInstance();
 // 面板数据
 const panelsDataList = ref([]);
+// 商品数据
+const goodsDataList = ref([]);
+// 订单数据
+const orderDataList = ref([]);
 
 // 获取首页统计数据-1
 proxy.$api.getHomeStatistics1Api().then(res => {
   const { data: panelsData } = res;
   panelsDataList.value = panelsData.panels;
+});
+
+// 获取首页统计数据-2
+proxy.$api.getHomeStatistics2Api().then(res => {
+  const { data: remindData } = res;
+  goodsDataList.value = remindData.goods;
+  orderDataList.value = remindData.order;
 });
 </script>
 
