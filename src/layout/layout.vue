@@ -5,7 +5,7 @@
       <AppHeader />
     </el-header>
     
-    <el-container>
+    <el-container style="height: 0;">
       <!-- 侧边栏 -->
       <el-aside>
         <SidebarMenu />

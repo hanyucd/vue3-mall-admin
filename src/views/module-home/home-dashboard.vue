@@ -56,8 +56,8 @@
         <OrderChart />
       </el-col>
       <el-col :span="12" :offset="0">
-        <RemindCard title="店铺及商品提示" tip="店铺及商品提示" :resData="goodsDataList" />
-        <RemindCard class=" mt-4" title="交易提示" tip="需要立即处理的订单" :resData="orderDataList" />
+        <RemindCard title="店铺及商品提示" tip="店铺及商品提示" :res-data="goodsDataList" />
+        <RemindCard class=" mt-4" title="交易提示" tip="需要立即处理的订单" :res-data="orderDataList" />
       </el-col>
     </el-row>
   </div>

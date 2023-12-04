@@ -1,11 +1,11 @@
 .slidebar-menu {
   height: 100%;
   transition: all .3s;
-  overflow: hidden;
+  // overflow: hidden;
   .el-menu-vertical {
     height: 100%;
     border: none;
-    padding-bottom: 20px;
     overflow-y: auto;
+    padding-bottom: 20px;
   }
 }
