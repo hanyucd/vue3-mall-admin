@@ -10,9 +10,14 @@
   }
   .el-main {
     @apply bg-light-200;
-    // display: flex;
-    // flex-direction: column;
+    display: flex;
+    flex-direction: column;
     // overflow: hidden;
+    .main-container {
+      flex: 1 0 auto;
+      overflow-y: auto;
+      height: 0;
+    }
   }
 }
 

@@ -76,7 +76,6 @@ const panelsDataList = ref([]);
 
 // 获取首页统计数据-1
 proxy.$api.getHomeStatistics1Api().then(res => {
-  console.log(res);
   const { data: panelsData } = res;
   panelsDataList.value = panelsData.panels;
 });

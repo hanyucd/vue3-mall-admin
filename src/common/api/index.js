@@ -14,5 +14,5 @@ export default {
   // 获取首页统计数据-2
   getHomeStatistics2Api: () => httpRequest(`/admin/statistics2`),
   // 获取首页统计数据-3
-  getHomeStatistics3Api: () => httpRequest(`/admin/statistics3`),
+  getHomeStatistics3Api: param => httpRequest(`/admin/statistics3`, param),
 };

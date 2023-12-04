@@ -15,7 +15,7 @@
         <NavTagGroup />
 
         <!-- 内容 -->
-        <router-view v-slot="{ Component }">
+        <router-view v-slot="{ Component }" class="main-container">
           <Transition name="fade" mode="out-in">
             <keep-alive :max="10">
               <component :is="Component" />
