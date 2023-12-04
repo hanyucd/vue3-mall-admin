@@ -13,6 +13,10 @@ import '@/router/permission'; // 执行路由全局守卫
 
 const app = createApp(App);
 
+// 注册自定义指令
+import installDirectives from '@/directives/index';
+installDirectives(app);
+
 // 全局注册 elementPlus 图标
 for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
   app.component(key, component);
@@ -27,5 +31,6 @@ app.use(router);
 app.use(store);
 app.mount('#app');
 
+// console.log(app);
 // createApp(App).mount('#app')
 

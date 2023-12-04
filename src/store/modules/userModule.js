@@ -5,19 +5,18 @@ const mutationType = {
   SET_USER_INFO: 'SET_USER_INFO',
   SET_USER_TOKEN: 'SET_USER_TOKEN',
   CLEAR_USER_DATA: 'CLEAR_USER_DATA',
-  SET_SIDEBAR_MENU: 'SET_SIDEBAR_MENU'
+  SET_RULE_NAMES: 'SET_RULE_NAMES'
 };
 
 const state = {
   userToken: authUtil.getUserToken(), // 用户token
   userInfo: {}, // 用户信息
-  sidebarMenuList: [], // 侧边栏菜单列表
-  // ruleNames: [], // 侧边栏菜单列表
+  ruleNames: [], // 按钮权限组
 };
 
 const getters = {
   userId: state => state.userInfo?.id || '', // 用户 id
-  sidebarMenuList: state => state.userInfo?.menus || []
+  sidebarMenuList: state => state.userInfo?.menus || [] // 侧边栏菜单列表
 };
 
 const mutations = {
@@ -29,10 +28,10 @@ const mutations = {
   [mutationType.SET_USER_INFO]: (state, _userInfo) => {
     state.userInfo = _userInfo;
   },
-  // 设置 侧边栏菜单
-  // [mutationType.SET_SIDEBAR_MENU]: (state, _menu) => {
-  //   state.sidebarMenuList = _menu;
-  // },
+  // 设置 按钮权限组
+  [mutationType.SET_RULE_NAMES]: (state, _ruleName) => {
+    state.ruleNames = _ruleName;
+  },
   // 清除 信息
   [mutationType.CLEAR_USER_DATA]: (state) => {
     state.userToken = '';
@@ -67,8 +66,6 @@ const actions = {
   userLogoutAction({ commit }) {
     return new Promise((resolve, reject) => {
       api.userLogoutApi().then(res => {
-        // commit(mutationType.SET_USER_TOKEN, '');
-        // commit(mutationType.SET_USER_INFO, {});
         commit(mutationType.CLEAR_USER_DATA);
         resolve(res);
       })
@@ -97,7 +94,7 @@ const actions = {
         .then(res => {
           const { data: userInfoData } = res;
           commit(mutationType.SET_USER_INFO, userInfoData);
-          // commit(mutationType.SET_SIDEBAR_MENU, userInfoData.menus);
+          commit(mutationType.SET_RULE_NAMES, userInfoData.ruleNames);
 
           resolve(userInfoData);
         })

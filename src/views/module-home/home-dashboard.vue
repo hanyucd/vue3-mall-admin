@@ -1,7 +1,7 @@
 <template>
   <div>
     <!-- 面板骨架屏 -->
-    <el-row :gutter="20">
+    <el-row v-permission="['getStatistics1,GET']" :gutter="20">
       <template v-if="!panelsDataList.length">
         <el-col v-for="i in 4" :key="i" :span="6" :offset="0">
           <el-skeleton style="width: 100%" animated loading>
