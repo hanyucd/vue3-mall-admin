@@ -6,6 +6,7 @@ const _hasPermission = (value, el = false) => {
   }
   const hasAuth = value.some(item => store.state.userModule.ruleNames.includes(item));
   if (el && !hasAuth) {
+    // 移除Dom节点
     el.parentNode && el.parentNode.removeChild(el);
   }
 
@@ -13,7 +14,7 @@ const _hasPermission = (value, el = false) => {
 };
 
 const permission = {
-  mounted (el, binding) {
+  mounted(el, binding) {
     _hasPermission(binding.value, el);
     // const btnPermission = binding.value;
     // const permission = store.getters.permission;

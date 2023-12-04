@@ -1,0 +1,8 @@
+.el-aside {
+  @apply flex flex-col;
+  .content {
+    flex: 1 0 auto;
+    height: 0;
+    overflow-y: auto;
+  }
+}
