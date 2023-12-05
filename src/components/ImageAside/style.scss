@@ -5,4 +5,7 @@
     height: 0;
     overflow-y: auto;
   }
+  .footer {
+    @apply flex items-center justify-center h-[50px];
+  }
 }

@@ -1,7 +1,7 @@
 <template>
   <el-container class="bg-white rounded">
     <el-header>
-      <el-button type="primary" @click="openDrawer">新增图片分类</el-button>
+      <el-button type="primary" @click="openAddImageClassDrawer">新增图片分类</el-button>
       <el-button type="warning" @click="uploadFile">上传图片</el-button>
     </el-header>
     
@@ -17,8 +17,14 @@
 <script setup>
 import ImageAside from '@/components/ImageAside/ImageAside.vue';
 import ImageMain from '@/components/ImageMain/ImageMain.vue';
-import { reactive, watch } from 'vue';
+import { ref } from 'vue';
 
+const imageAsideRef = ref(null);
+
+/**
+ * 打开新增图片分类 drawer
+ */
+const openAddImageClassDrawer = () => imageAsideRef.value.openAddImageClassDrawer();
 </script>
 
 <style lang="scss" scoped>
