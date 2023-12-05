@@ -63,7 +63,7 @@ defineExpose({
   openFormDrawer,
   closeFormDrawer,
   showSubmitBtnLoading,
-  hideSubmitBtnLoading
+  hideSubmitBtnLoading,
 });
 </script>
 

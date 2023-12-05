@@ -3,7 +3,13 @@
     <!-- 内容区 -->
     <div class="content">
       <div v-for="(item, index) in imageClassList" :key="index">
-        <ImageAsideItem :active="activeImageClassId === item.id">{{ item.name }}</ImageAsideItem>
+        <ImageAsideItem
+          :active="activeImageClassId === item.id"
+          @editImageClassEvt="onEditImageClassEvt(item)"
+          @deleteImageClassEvt="onDeleteImageClassEvt(item)"
+        >
+          {{ item.name }}
+        </ImageAsideItem>
       </div>
     </div>
     <!-- 脚部分页器 -->
@@ -21,7 +27,7 @@
   </el-aside>
 
   <!-- 新增图片分类 表单drawer -->
-  <FormDrawer ref="formDrawerRef" title="新增图片分类" destroy-on-close @formDrawerSubmitEvt="onFormDrawerSubmitEvt">
+  <FormDrawer ref="formDrawerRef" :title="imageClassFormDrawerTitle" destroy-on-close @formDrawerSubmitEvt="onFormDrawerSubmitEvt" @formDrawerCloseEvt="onFormDrawerCloseEvt">
     <el-form ref="imageClassFormRef" :model="imageClassForm" :rules="imageClassFormRules" label-width="80px">
       <el-form-item label="分类名称" prop="name">
         <el-input v-model="imageClassForm.name" />
@@ -38,7 +44,7 @@
 <script setup>
 import ImageAsideItem from '@/components/ImageAsideItem/ImageAsideItem.vue';
 import FormDrawer from '@/components/FormDrawer/FormDrawer.vue';
-import { ref, reactive, getCurrentInstance } from 'vue';
+import { ref, reactive, computed, getCurrentInstance } from 'vue';
 
 let isLoading = ref(false); // 是否加载中
 let imageClassPage = ref(1); // 图片分类 当前页码
@@ -46,6 +52,16 @@ let imageClassLimit = ref(10); // 图片分类 一页数量
 let imageClassTotal = ref(0); // 图片分类 数量总数
 let imageClassList = ref([]); // 图片分类 列表数据
 let activeImageClassId = ref(0); // 选中的图片分类 id
+const formDrawerRef = ref(null);
+// 图片分类表单数据
+const imageClassForm = reactive({ name: '', order: 30 });
+// 图片分类 form 表单组件引用
+const imageClassFormRef = ref(null);
+// 当前编辑图片分类 id
+const activeEditImageClassId = ref(0);
+// drawer 标题
+const imageClassFormDrawerTitle = computed(()=> activeEditImageClassId.value ? '修改' : '新增');
+
 const { proxy } = getCurrentInstance();
 
 /**
@@ -81,9 +97,6 @@ const changeImageClassId = imageClassId => {
  */
 const onCurrentPaginationChangeEvt = page => _getImageClassList(page);
 
-const formDrawerRef = ref(null);
-// 图片分类表单数据
-const imageClassForm = reactive({ name: '', order: 30 });
 // 图片分类表单验证
 const imageClassFormRules = {
   name: [ { required: true, message: '图库分类名称不能为空', trigger: 'blur' } ]
@@ -94,19 +107,44 @@ const imageClassFormRules = {
  */
 const openAddImageClassDrawer = () => formDrawerRef.value.openFormDrawer();
 
-// 图片分类 form 表单组件引用
-const imageClassFormRef = ref(null);
 /**
- * 监听 formDraw 提交 事件
+ * 监听 formDraw 提交事件: 新增/更新
  */
 const onFormDrawerSubmitEvt = () => {
-  // console.log('提交');
   // form 表单组件
   imageClassFormRef.value.validate(valid => {
-    console.log(valid);
     if (!valid) return;
-    // formDrawerRef.value.showSubmitBtnLoading();
+    formDrawerRef.value.showSubmitBtnLoading();
+    // 更新或者新增
+    const targetApiReq = activeEditImageClassId.value ? proxy.$api['updateImageClassApi'](activeEditImageClassId.value, { ...imageClassForm }) : proxy.$api['createImageClassApi'](imageClassForm);
+
+    targetApiReq.then(res => {
+      proxy.$commonUtil.elNotify(`${ '新增' }成功`);
+      formDrawerRef.value.closeFormDrawer();
+      // 更新 ? 请求当页数据 : 第一页数据
+      _getImageClassList(activeEditImageClassId.value ? imageClassPage.value : 1);
+    }).finally(() => {
+      formDrawerRef.value.hideSubmitBtnLoading();
+    });
   });
+};
+
+/**
+ * 监听 formDraw 关闭事件
+ */
+const onFormDrawerCloseEvt = () => {
+  activeEditImageClassId.value = 0;
+  Object.assign(imageClassForm, { name: '', order: 30 });
+};
+
+/**
+ * 监听编辑事件
+ */
+const onEditImageClassEvt = imageClassItem => {
+  activeEditImageClassId.value = imageClassItem.id;
+  imageClassForm.name = imageClassItem.name;
+  imageClassForm.order = imageClassItem.order;
+  openAddImageClassDrawer();
 };
 
 defineExpose({ openAddImageClassDrawer });

@@ -17,4 +17,10 @@ export default {
   getHomeStatistics3Api: param => httpRequest(`/admin/statistics3`, param),
   // 获取图片分类列表
   getImageClassListApi: (page, param) => httpRequest(`/admin/image_class/${ page }`, param),
+  // 创建图片分类
+  createImageClassApi: param => httpRequest(`/admin/image_class`, param, 'post'),
+  // 更新图片分类
+  updateImageClassApi: (imageClassId, param) => httpRequest(`/admin/image_class/${ imageClassId }`, param, 'post'),
+  // 删除图片分类
+  deleteImageClassApi: imageClassId => httpRequest(`/admin/image_class${ imageClassId }/delete`, {}, 'post'),
 };
