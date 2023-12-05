@@ -86,7 +86,7 @@ const _getImageClassList = async (page = 1) => {
 _getImageClassList();
 
 /**
- * 更换图片分类
+ * 更换图片分类 id
  */
 const changeImageClassId = imageClassId => {
   activeImageClassId.value = imageClassId;
@@ -119,9 +119,9 @@ const onFormDrawerSubmitEvt = () => {
     const targetApiReq = activeEditImageClassId.value ? proxy.$api['updateImageClassApi'](activeEditImageClassId.value, { ...imageClassForm }) : proxy.$api['createImageClassApi'](imageClassForm);
 
     targetApiReq.then(res => {
-      proxy.$commonUtil.elNotify(`${ '新增' }成功`);
+      proxy.$commonUtil.elNotify(`${ imageClassFormDrawerTitle.value }成功`);
       formDrawerRef.value.closeFormDrawer();
-      // 更新 ? 请求当页数据 : 第一页数据
+      // 更新 ? 请求当页数据 : 请求第一页数据
       _getImageClassList(activeEditImageClassId.value ? imageClassPage.value : 1);
     }).finally(() => {
       formDrawerRef.value.hideSubmitBtnLoading();
@@ -145,6 +145,22 @@ const onEditImageClassEvt = imageClassItem => {
   imageClassForm.name = imageClassItem.name;
   imageClassForm.order = imageClassItem.order;
   openAddImageClassDrawer();
+};
+
+/**
+ * 监听删除事件
+ */
+const onDeleteImageClassEvt = async imageClassItem => {
+  isLoading.value = true;
+  try {
+    await proxy.$api.deleteImageClassApi(imageClassItem.id);
+    proxy.$commonUtil.elNotify(`删除成功`);
+    _getImageClassList();
+    formDrawerRef.value.closeFormDrawer();
+  } catch (error) {
+    isLoading.value = false;
+    console.log(error);
+  }
 };
 
 defineExpose({ openAddImageClassDrawer });
