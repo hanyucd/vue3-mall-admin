@@ -15,4 +15,6 @@ export default {
   getHomeStatistics2Api: () => httpRequest(`/admin/statistics2`),
   // 获取首页统计数据-3
   getHomeStatistics3Api: param => httpRequest(`/admin/statistics3`, param),
+  // 获取图片分类列表
+  getImageClassListApi: (page, param) => httpRequest(`/admin/image_class/${ page }`, param),
 };
