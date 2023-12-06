@@ -23,4 +23,6 @@ export default {
   updateImageClassApi: (imageClassId, param) => httpRequest(`/admin/image_class/${ imageClassId }`, param, 'post'),
   // 删除图片分类
   deleteImageClassApi: imageClassId => httpRequest(`/admin/image_class/${ imageClassId }/delete`, {}, 'post'),
+  // 获取图片分类下 图片列表
+  getImageListApi: (imageClassId, page, param) => httpRequest(`/admin/image_class/${ imageClassId }/image/${ page }`, param),
 };

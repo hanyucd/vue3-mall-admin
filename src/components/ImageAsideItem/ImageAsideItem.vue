@@ -7,7 +7,7 @@
 
     <el-popconfirm title="是否删除此分类?" width="160" confirm-button-text="删除" cancel-button-text="取消" @confirm="$emit('deleteImageClassEvt')">
       <template #reference>
-        <el-button class="px-1" text type="primary" size="small">
+        <el-button class="px-1" text type="primary" size="small" @click.stop="">
           <el-icon :size="13"><Close /></el-icon>
         </el-button>
       </template>

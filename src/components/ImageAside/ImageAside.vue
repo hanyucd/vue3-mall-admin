@@ -5,6 +5,7 @@
       <div v-for="(item, index) in imageClassList" :key="index">
         <ImageAsideItem
           :active="activeImageClassId === item.id"
+          @click="changeImageClassItem(item)"
           @editImageClassEvt="onEditImageClassEvt(item)"
           @deleteImageClassEvt="onDeleteImageClassEvt(item)"
         >
@@ -64,6 +65,8 @@ const imageClassFormDrawerTitle = computed(()=> activeEditImageClassId.value ? '
 
 const { proxy } = getCurrentInstance();
 
+const emit = defineEmits(['changeImageClassEvt']);
+
 /**
  * 获取图片分类列表
  */
@@ -75,7 +78,7 @@ const _getImageClassList = async (page = 1) => {
     imageClassTotal.value = imageClassData.totalCount;
     imageClassList.value = imageClassData.list;
     // 默认选中第一个分类
-    imageClassList.value[0] && changeImageClassId(imageClassList.value[0].id);
+    imageClassList.value[0] && _changeImageClassId(imageClassList.value[0].id);
     isLoading.value = false;
   } catch (error) {
     isLoading.value = false;
@@ -88,8 +91,16 @@ _getImageClassList();
 /**
  * 更换图片分类 id
  */
-const changeImageClassId = imageClassId => {
+const _changeImageClassId = imageClassId => {
   activeImageClassId.value = imageClassId;
+  emit('changeImageClassEvt', imageClassId);
+};
+
+/**
+ * 改变图片分类项
+ */
+const changeImageClassItem = imageClassItem => {
+  _changeImageClassId(imageClassItem.id);
 };
 
 /**
@@ -138,7 +149,7 @@ const onFormDrawerCloseEvt = () => {
 };
 
 /**
- * 监听编辑事件
+ * 监听图片分类项 编辑事件
  */
 const onEditImageClassEvt = imageClassItem => {
   activeEditImageClassId.value = imageClassItem.id;
@@ -148,7 +159,7 @@ const onEditImageClassEvt = imageClassItem => {
 };
 
 /**
- * 监听删除事件
+ * 监听图片分类项 删除事件
  */
 const onDeleteImageClassEvt = async imageClassItem => {
   isLoading.value = true;

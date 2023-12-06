@@ -6,7 +6,7 @@
     </el-header>
     
     <el-container>
-      <ImageAside ref="imageAsideRef" />
+      <ImageAside ref="imageAsideRef" @changeImageClassEvt="onChangeImageClassEvt" />
       <ImageMain ref="imageMainRef" />
       <!-- <image-aside ref="imageAsideRef" @change="aside_completed" />
       <image-main ref="imageMainRef" /> -->
@@ -20,11 +20,20 @@ import ImageMain from '@/components/ImageMain/ImageMain.vue';
 import { ref } from 'vue';
 
 const imageAsideRef = ref(null);
+const imageMainRef = ref(null);
 
 /**
  * 打开新增图片分类 drawer
  */
 const openAddImageClassDrawer = () => imageAsideRef.value.openAddImageClassDrawer();
+
+/**
+ * 监听侧边栏 图片分类改变 事件
+ */
+const onChangeImageClassEvt = imageClassId => {
+  console.log('图片分类改变', imageClassId);
+  imageMainRef.value.fetchImageList(imageClassId);
+};
 </script>
 
 <style lang="scss" scoped>
