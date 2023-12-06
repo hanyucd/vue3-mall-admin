@@ -6,7 +6,7 @@
           <el-col v-for="(item, index) in imageList" :key="index" :span="6" class="mb-3">
             <el-card shadow="hover" :body-style="{ padding: '0' }" class="border-2" :class="{'border-red-500': item.checked}">
               <div class="relative flex">
-                <el-image :src="item.url" fit="cover" :lazy="true" class="w-full h-[150px]" :preview-src-list="[item.url]" :initial-index="index" />
+                <el-image :src="item.url" fit="cover" :lazy="true" class="w-full h-[150px]" :preview-src-list="imageURLList" :initial-index="index" />
                 <p class="img-title">{{ item.name }}</p>
               </div>
               <!-- 按钮组 -->
@@ -23,6 +23,7 @@
           </el-col>
         </el-row>
       </template>
+      
       <div v-else class="w-full text-3xl mt-28 flex items-center justify-center text-gray-500">
         当前分类还没有图片，快上传吧！！！
       </div>
@@ -38,22 +39,26 @@
         @current-change="onCurrentPaginationChangeEvt"
       />
     </div>
+
+    <!-- 文件上传 drawer -->
+    <el-drawer v-model="isShowUploadFileDrawer" title="上传图片" destroy-on-close>
+      <UploadFile :post-data="{ 'image_class_id': activeImageClassId }" @uploadFileSucEvt="onUploadFileSucEvt" />
+    </el-drawer>
   </el-main>
 </template>
 
 <script setup>
-import { ref, getCurrentInstance } from 'vue';
+import { ref, computed, getCurrentInstance } from 'vue';
 import * as commonUtil from '@/common/utils';
-
-const props = defineProps({
-  // activeImageClassId: { type: Number, default: 0}
-});
+import UploadFile from '@/components/UploadFile/UploadFile.vue';
 
 let isLoading = ref(false); // 是否加载中
 let imageListPage = ref(1); // 图片 当前页码
 let imageListLimit = ref(10); // 图片 一页数量
 let imageListTotal = ref(0); // 图片 数量总数
 let imageList = ref([]); // 图片 列表数据
+// 图片url 列表
+const imageURLList = computed(() => imageList.value.map(item => item.url));
 
 // 选中的图片分类 id
 let activeImageClassId = ref(0);
@@ -121,8 +126,26 @@ const handleDelImageEvt = imageItem => {
   });
 };
 
+// 是否显示上传文件 drawer
+let isShowUploadFileDrawer = ref(false);
+/**
+ * 打开上传文件 drawer
+ */
+const openUploadFileDrawer = () => isShowUploadFileDrawer.value = true;
+
+/**
+ * 打开上传文件 drawer
+ */
+const onUploadFileSucEvt = uploadRes => {
+  console.log('上传成功', uploadRes);
+  commonUtil.elNotify('上传成功');
+  isShowUploadFileDrawer.value = false;
+  _getImageList(); // 重新请求第一页数据
+};
+
 defineExpose({
-  fetchImageList
+  fetchImageList,
+  openUploadFileDrawer
 });
 </script>
 

@@ -2,7 +2,7 @@
   <el-container class="bg-white rounded">
     <el-header>
       <el-button type="primary" @click="openAddImageClassDrawer">新增图片分类</el-button>
-      <el-button type="warning" @click="uploadFile">上传图片</el-button>
+      <el-button type="warning" @click="openUploadFileDrawer">上传图片</el-button>
     </el-header>
     
     <el-container>
@@ -31,6 +31,11 @@ const openAddImageClassDrawer = () => imageAsideRef.value.openAddImageClassDrawe
 const onChangeImageClassEvt = imageClassId => {
   imageMainRef.value.fetchImageList(imageClassId);
 };
+
+/**
+ * 打开上传文件 drawer
+ */
+const openUploadFileDrawer = () => imageMainRef.value.openUploadFileDrawer();
 </script>
 
 <style lang="scss" scoped>

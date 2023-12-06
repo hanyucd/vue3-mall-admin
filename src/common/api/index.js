@@ -29,4 +29,7 @@ export default {
   updateImageNameApi: (imageId, param) => httpRequest(`/admin/image/${ imageId }`, param, 'post'),
   // 删除图片
   delImageApi: param => httpRequest(`/admin/image/delete_all`, param, 'post'),
+  // 上传图片
+  uploadImageApi: import.meta.env.VITE_APP_BASE_API + '/admin/image/upload',
+  aaa: import.meta.env.VITE_APP_BASE_API + '/admin/image/upload'
 };
