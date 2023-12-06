@@ -5,6 +5,9 @@
     flex: 1 0 auto;
     height: 0;
     overflow-y: auto;
+    .img-title {
+      @apply text-sm bg-dark-900 bg-opacity-50 text-light-100 px-2 py-1 truncate absolute bottom-0 left-0 right-0;
+    }
   }
   .footer {
     @apply flex items-center justify-center h-[50px];

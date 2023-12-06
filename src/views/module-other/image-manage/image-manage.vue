@@ -8,8 +8,6 @@
     <el-container>
       <ImageAside ref="imageAsideRef" @changeImageClassEvt="onChangeImageClassEvt" />
       <ImageMain ref="imageMainRef" />
-      <!-- <image-aside ref="imageAsideRef" @change="aside_completed" />
-      <image-main ref="imageMainRef" /> -->
     </el-container>
   </el-container>
 </template>
@@ -31,7 +29,6 @@ const openAddImageClassDrawer = () => imageAsideRef.value.openAddImageClassDrawe
  * 监听侧边栏 图片分类改变 事件
  */
 const onChangeImageClassEvt = imageClassId => {
-  console.log('图片分类改变', imageClassId);
   imageMainRef.value.fetchImageList(imageClassId);
 };
 </script>

@@ -3,7 +3,8 @@
 // 修改滚动条样式
 ::-webkit-scrollbar {
   // display: none;
-  width: 4px;
+  width: 4px; // 纵向滚动条宽度
+  height: 4px; // 横向滚动条高度
 }
 
 // 滚动条的轨道

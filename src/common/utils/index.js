@@ -17,3 +17,12 @@ export const elMsgBoxConfirm = (message = '提示内容', type = 'warning', titl
       });
   });
 };
+
+// elemmentPlus 消息弹出输入框
+export const elMsgBoxPrompt = (msg = '', value = '', title = '') => {
+  return ElMessageBox.prompt(msg, title, {
+    confirmButtonText: '确认',
+    cancelButtonText: '取消',
+    inputValue: value
+  });
+};
