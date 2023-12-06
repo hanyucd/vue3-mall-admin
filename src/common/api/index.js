@@ -31,5 +31,6 @@ export default {
   delImageApi: param => httpRequest(`/admin/image/delete_all`, param, 'post'),
   // 上传图片
   uploadImageApi: import.meta.env.VITE_APP_BASE_API + '/admin/image/upload',
-  aaa: import.meta.env.VITE_APP_BASE_API + '/admin/image/upload'
+  // 获取公告列表
+  getNoticeListApi: page => httpRequest(`/admin/notice/${ page }`),
 };

@@ -5,8 +5,7 @@ import userModule from './modules/userModule';
 const store = createStore({
   state () {
     return {
-      // isCollapseSidebarMenu: false, // 侧边栏是否折叠
-      isCollapseSidebarMenu: true, // 侧边栏是否折叠
+      isCollapseSidebarMenu: false, // 侧边栏是否折叠
     };
   },
   getters: {},
