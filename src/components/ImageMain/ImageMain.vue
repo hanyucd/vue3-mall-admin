@@ -13,7 +13,7 @@
               <div class="flex items-center justify-center p-2">
                 <!-- <el-checkbox v-if="showChecked" v-model="item.checked" @change="handleChooseChange(item)" /> -->
                 <el-button type="primary" size="small" text @click="handleImageRenameEvt(item)">重命名</el-button>
-                <el-popconfirm title="是否删除该图片?" width="160" confirm-button-text="删除" cancel-button-text="取消" @confirm="handleDelete(item.id)">
+                <el-popconfirm title="是否删除该图片?" width="160" confirm-button-text="删除" cancel-button-text="取消" @confirm="handleDelImageEvt(item)">
                   <template #reference>
                     <el-button type="primary" size="small" text>删除</el-button>
                   </template>
@@ -105,9 +105,19 @@ const handleImageRenameEvt = imageItem => {
 
     proxy.$api.updateImageNameApi(imageItem.id, param).then(_ => {
       commonUtil.elNotify('重命名成功');
-      // 重新请求当页数据
-      _getImageList(imageListPage.value);
+      _getImageList(imageListPage.value); // 重新请求当页数据
     });
+  });
+};
+
+/**
+ * 图片删除
+ */
+const handleDelImageEvt = imageItem => {
+  const param = { ids: [imageItem.id] };
+  proxy.$api.delImageApi(param).then(_ => {
+    commonUtil.elNotify('删除成功');
+    _getImageList(imageListPage.value); // 重新请求当页数据
   });
 };
 
