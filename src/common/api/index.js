@@ -39,4 +39,6 @@ export default {
   updateNoticeApi: (noticeId, param) => httpRequest(`/admin/notice/${ noticeId }`, param, 'post'),
   // 删除公告
   deleteNoticeApi: noticeId => httpRequest(`/admin/notice/${ noticeId }/delete`, {}, 'post'),
+  // 获取管理员 图片列表
+  getManagerListApi: (page, param) => httpRequest(`/admin/manager/${ page }`, param),
 };

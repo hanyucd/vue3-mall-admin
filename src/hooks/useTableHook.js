@@ -44,7 +44,6 @@ export const useBaseTableHook = (options = {}) => {
 
   // 表格底部分页器页码变化
   const onTableCurPaginationChangeEvt = page => {
-    console.log(page);
     getTableDataFetch(page);
   };
 
@@ -136,8 +135,6 @@ export const useFormTableHook = (options = {}) => {
 
   // 编辑 table 项
   const handleEditTableItem = tableRow => {
-    console.log(tableRow);
-
     for (const key in tableFormData) {
       tableFormData[key] = tableRow[key];
     }

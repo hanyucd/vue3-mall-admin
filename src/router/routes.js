@@ -104,20 +104,20 @@ export const asyncRouterMap = [
   //   meta: { title: '物流设置' },
   //   component: () => import('~/pages/setting/Ship.vue')
   // },
-  // { 
-  //   path: '/manager/list',
-  //   meta: { title: '管理员管理' },
-  //   component: () => import('~/pages/manager/List.vue')
-  // },
+  { 
+    path: '/manager/list',
+    meta: { title: '管理员管理' },
+    component: () => import('@/views/module-manager/manager-manage/manager-manage.vue')
+  },
+  { 
+    path: '/role/list',
+    meta: { title: '角色管理' },
+    component: () => import('@/views/module-manager/role-manage/role-manage.vue')
+  },
   // { 
   //   path: '/access/list',
   //   meta: { title: '权限管理' },
   //   component: () => import('~/pages/access/List.vue')
-  // },
-  // { 
-  //   path: '/role/list',
-  //   meta: { title: '角色管理' },
-  //   component: () => import('~/pages/role/List.vue')
   // },
   // { 
   //   path: '/skus/list',
