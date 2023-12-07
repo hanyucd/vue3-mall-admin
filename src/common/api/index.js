@@ -33,4 +33,10 @@ export default {
   uploadImageApi: import.meta.env.VITE_APP_BASE_API + '/admin/image/upload',
   // 获取公告列表
   getNoticeListApi: page => httpRequest(`/admin/notice/${ page }`),
+  // 创建公告
+  createNoticeApi: param => httpRequest(`/admin/notice`, param, 'post'),
+  // 更新公告
+  updateNoticeApi: (noticeId, param) => httpRequest(`/admin/notice/${ noticeId }`, param, 'post'),
+  // 删除公告
+  deleteNoticeApi: noticeId => httpRequest(`/admin/notice/${ noticeId }/delete`, {}, 'post'),
 };
