@@ -51,7 +51,7 @@ export const useBaseTableHook = (options = {}) => {
         // options.onGetListSuccess(res)
       } else {
         tableTotal.value = tableData.totalCount;
-        tableDataList.value = tableData.list;
+        tableDataList.value = tableData.list.map(item => { item.isLoading = false; return item; });
       }
       
       console.log('表格数据', tableData);
@@ -80,6 +80,17 @@ export const useBaseTableHook = (options = {}) => {
     });
 };
 
+// switch状态切换
+const switchChange = (status, row) => {
+  row.isLoading = true;
+  options.updateStatusApi(row.id, { status }).then(res => {
+      commonUtil.elNotify(`修改状态成功`);
+      row.status = status;
+  }).finally(() => {
+      row.isLoading = false;
+  });
+};
+
   return {
     tableIsLoading,
     tablePage,
@@ -89,6 +100,7 @@ export const useBaseTableHook = (options = {}) => {
     searchForm,
     getTableDataFetch,
     resetSearchForm,
+    switchChange,
     onTableCurPaginationChangeEvt,
     handleTableItemDelete
   };

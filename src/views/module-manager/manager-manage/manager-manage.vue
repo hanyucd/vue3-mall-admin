@@ -78,14 +78,16 @@ const {
   tableTotal,
   tableDataList,
   searchForm,
+  resetSearchForm,
+  switchChange,
   getTableDataFetch,
   onTableCurPaginationChangeEvt,
-  resetSearchForm,
   handleTableItemDelete
 } = useTableHook.useBaseTableHook({
   searchForm: { keyword: '' },
   getTableDataApi: proxy.$api.getManagerListApi,
-  deleteApi: proxy.$api.deleteNoticeApi
+  deleteApi: proxy.$api.deleteNoticeApi,
+  updateStatusApi: proxy.$api.updateManagerStatusApi,
 });
 
 getTableDataFetch();
