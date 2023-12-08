@@ -43,4 +43,10 @@ export default {
   getManagerListApi: (page, param) => httpRequest(`/admin/manager/${ page }`, param),
   // 更新管理员 状态
   updateManagerStatusApi: (managerId, param) => httpRequest(`/admin/manager/${ managerId }/update_status`, param, 'post'),
+  // 创建管理员
+  createManagerApi: param => httpRequest(`/admin/manager`, param, 'post'),
+  // 更新管理员
+  updateManagerApi: (managerId, param) => httpRequest(`/admin/manager/${ managerId }`, param, 'post'),
+  // 删除管理员
+  deleteManagerApi: managerId => httpRequest(`/admin/manager/${ managerId }/delete`, {}, 'post'),
 };

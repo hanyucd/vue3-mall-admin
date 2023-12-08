@@ -48,7 +48,7 @@ export const useBaseTableHook = (options = {}) => {
       const { data: tableData } = await options.getTableDataApi(page, param);
 
       if (options.onGetListSuccess && typeof options.onGetListSuccess == 'function') {
-        // options.onGetListSuccess(res)
+        options.onGetListSuccess(tableData);
       } else {
         tableTotal.value = tableData.totalCount;
         tableDataList.value = tableData.list.map(item => { item.isLoading = false; return item; });
@@ -71,8 +71,8 @@ export const useBaseTableHook = (options = {}) => {
   const handleTableItemDelete = tableRow => {
     tableIsLoading.value = true;
 
-    const noticeId = tableRow.id;
-    options.deleteApi(noticeId).then(res => {
+    const deleteItemId = tableRow.id;
+    options.deleteApi(deleteItemId).then(res => {
       commonUtil.elNotify(`删除成功`);
       getTableDataFetch(tablePage.value);
     }).finally(() => {
@@ -110,8 +110,6 @@ const switchChange = (status, row) => {
  * 表格操作行为
  */
 export const useFormTableHook = (options = {}) => {
-  // console.log('表单行为', options);
-
   // 编辑表格项 id
   const editTableItemId = ref(0);
   // 抽屉标题
@@ -132,7 +130,7 @@ export const useFormTableHook = (options = {}) => {
       }
     }
   };
-  // 首次调取重置方法
+  // 默认首次调取一次 重置方法
   _resetFormData();
 
   // 打开表单 drawer
