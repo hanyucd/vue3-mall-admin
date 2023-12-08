@@ -1,5 +1,12 @@
 <template>
   <el-card shadow="never" class="border-0">
+    <!-- 搜索 -->
+    <SearchWrap :form-model="searchForm" @searchEvt="getTableDataFetch" @resetEvt="resetSearchForm">
+      <SearchItem label="关键词">
+        <el-input v-model="searchForm.keyword" clearable placeholder="请输入管理员昵称搜索" />
+      </SearchItem>
+    </SearchWrap>
+    
     <div @click="openFormDrawer">新增按钮</div>
     
     <!-- 表格数据 -->
@@ -57,6 +64,8 @@
 
 <script setup>
 import FormDrawer from '@/components/FormDrawer/FormDrawer.vue';
+import SearchWrap from '@/components/SearchWrap/SearchWrap.vue';
+import SearchItem from '@/components/SearchItem/SearchItem.vue';
 import { getCurrentInstance } from 'vue';
 import * as useTableHook from '@/hooks/useTableHook';
 
@@ -68,10 +77,13 @@ const {
   tableLimit,
   tableTotal,
   tableDataList,
+  searchForm,
   getTableDataFetch,
   onTableCurPaginationChangeEvt,
+  resetSearchForm,
   handleTableItemDelete
 } = useTableHook.useBaseTableHook({
+  searchForm: { keyword: '' },
   getTableDataApi: proxy.$api.getManagerListApi,
   deleteApi: proxy.$api.deleteNoticeApi
 });

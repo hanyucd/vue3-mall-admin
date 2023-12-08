@@ -10,15 +10,35 @@ export const useBaseTableHook = (options = {}) => {
   const tableLimit = ref(10); // 表格一页数据量
   const tableTotal = ref(0); // 表格数据总数
   const tableDataList = ref([]); // 表格数据
+  // 搜索表单
+  let searchForm = null;
+  // 重置搜索框
+  let resetSearchForm = null;
+
+
+  // 赋值搜索 双向绑定 表单值
+  if (options.searchForm) {
+    searchForm = reactive({ ...options.searchForm });
+    // 添加重置表单方法
+    resetSearchForm = () => {
+      for (const key in searchForm) {
+        if (key !== 'user_id') {
+          searchForm[key] = options.searchForm[key];
+        }
+      }
+      // 重置后重新调取第一页数据
+      getTableDataFetch();
+    };
+  }
+
 
   // 获取目标表格数据
   const getTableDataFetch = async (page = 1) => {
     tableIsLoading.value = true;
 
     const param = {
-      page,
       limit: tableLimit.value,
-      // ...options
+      ...searchForm // 搜索参数
     };
 
     console.log('页码', page);
@@ -66,7 +86,9 @@ export const useBaseTableHook = (options = {}) => {
     tableLimit,
     tableTotal,
     tableDataList,
+    searchForm,
     getTableDataFetch,
+    resetSearchForm,
     onTableCurPaginationChangeEvt,
     handleTableItemDelete
   };
