@@ -1,0 +1,16 @@
+.choose-image-btn {
+  @apply w-[100px] h-[100px] rounded border bg-light-100 flex justify-center items-center cursor-pointer hover:(bg-gray-100);
+}
+
+.el-container {
+  overflow: hidden;
+  height: 66vh;
+
+  .el-header {
+      @apply flex items-center;
+      border-bottom: 1px solid #eee;
+      .el-tag:hover {
+          cursor: pointer;
+      }
+  }
+}

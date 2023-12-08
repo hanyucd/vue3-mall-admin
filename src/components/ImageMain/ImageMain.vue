@@ -4,14 +4,14 @@
       <template v-if="imageList.length">
         <el-row :gutter="10">
           <el-col v-for="(item, index) in imageList" :key="index" :span="6" class="mb-3">
-            <el-card shadow="hover" :body-style="{ padding: '0' }" class="border-2" :class="{'border-red-500': item.checked}">
+            <el-card shadow="hover" :body-style="{ padding: '0' }" class="border-2" :class="{'border-green-500': item.checked}">
               <div class="relative flex">
                 <el-image :src="item.url" fit="cover" :lazy="true" class="w-full h-[150px]" :preview-src-list="imageURLList" :initial-index="index" />
                 <p class="img-title">{{ item.name }}</p>
               </div>
               <!-- 按钮组 -->
               <div class="flex items-center justify-center p-2">
-                <!-- <el-checkbox v-if="showChecked" v-model="item.checked" @change="handleChooseChange(item)" /> -->
+                <el-checkbox v-if="isShowChecked" v-model="item.checked" @change="handleCheckedChange(item)" />
                 <el-button type="primary" size="small" text @click="handleImageRenameEvt(item)">重命名</el-button>
                 <el-popconfirm title="是否删除该图片?" width="160" confirm-button-text="删除" cancel-button-text="取消" @confirm="handleDelImageEvt(item)">
                   <template #reference>
@@ -51,6 +51,11 @@
 import { ref, computed, getCurrentInstance } from 'vue';
 import * as commonUtil from '@/common/utils';
 import UploadFile from '@/components/UploadFile/UploadFile.vue';
+
+const props =  defineProps({
+  isShowChecked: { type: Boolean, default: false },
+  imageLimit: { type: Number, default: 1 },
+});
 
 let isLoading = ref(false); // 是否加载中
 let imageListPage = ref(1); // 图片 当前页码
@@ -100,6 +105,31 @@ const fetchImageList = imageClassId => {
   _getImageList();
 };
 
+// 选中的图片 列表
+const checkedImageList = computed(() => imageList.value.filter(item => item.checked));
+
+const emit = defineEmits(['imageChooseEvt']);
+/**
+ * 切换图片复选框选中状态
+ */
+const handleCheckedChange = imageItem => {
+  console.log(imageItem);
+
+  if (imageItem.checked && checkedImageList.value.length > props.imageLimit) {
+    imageItem.checked = false;
+    commonUtil.elNotify(`只能选择${ props.imageLimit }张图片`, 'error');
+  }
+  
+  emit('imageChooseEvt', checkedImageList.value);
+};
+
+/**
+ * 清空图片选中的复选框
+ */
+const clearImageCheckbox = () => {
+  imageList.value.forEach(item => item.checked = false);
+};
+
 /**
  * 图片重命名
  */
@@ -145,7 +175,8 @@ const onUploadFileSucEvt = uploadRes => {
 
 defineExpose({
   fetchImageList,
-  openUploadFileDrawer
+  openUploadFileDrawer,
+  clearImageCheckbox
 });
 </script>
 

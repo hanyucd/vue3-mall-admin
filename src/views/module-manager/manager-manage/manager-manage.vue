@@ -64,8 +64,8 @@
     <FormDrawer ref="formDrawerRef" :title="formDrawerTitle" destroy-on-close @formDrawerSubmitEvt="onFormDrawerSubmitEvt" @formDrawerCloseEvt="onFormDrawerCloseEvt">
       <el-form ref="formRef" :model="tableFormData" :rules="tableFormRules" label-width="80px" :inline="false" size="default">
         <el-form-item label="头像" prop="avatar">
-          头像
-          <!-- <choose-image v-model="tableFormData.avatar" /> -->
+          <!-- 组件 v-model 实现双向绑定 -->
+          <ChooseImage v-model="tableFormData.avatar" />
         </el-form-item>
         
         <el-form-item label="用户名" prop="username">
@@ -95,6 +95,8 @@
 import FormDrawer from '@/components/FormDrawer/FormDrawer.vue';
 import SearchWrap from '@/components/SearchWrap/SearchWrap.vue';
 import SearchItem from '@/components/SearchItem/SearchItem.vue';
+import ChooseImage from '@/components/ChooseImage/ChooseImage.vue';
+
 import { ref, getCurrentInstance } from 'vue';
 import * as useTableHook from '@/hooks/useTableHook';
 
@@ -120,7 +122,7 @@ const {
   updateStatusApi: proxy.$api.updateManagerStatusApi,
   deleteApi: proxy.$api.deleteManagerApi,
   onGetListSuccess: tableDataRes => {
-    console.log(tableDataRes);
+    // console.log(tableDataRes);
     // 赋值
     managerRoles.value = tableDataRes.roles || [];
     tableDataList.value = tableDataRes.list.map(item => { item.isLoading = false; return item; });

@@ -41,9 +41,6 @@ export const useBaseTableHook = (options = {}) => {
       ...searchForm // 搜索参数
     };
 
-    console.log('页码', page);
-    console.log('参数', param);
-
     try {
       const { data: tableData } = await options.getTableDataApi(page, param);
 
@@ -54,7 +51,7 @@ export const useBaseTableHook = (options = {}) => {
         tableDataList.value = tableData.list.map(item => { item.isLoading = false; return item; });
       }
       
-      console.log('表格数据', tableData);
+      // console.log('表格数据', tableData);
       tableIsLoading.value = false;
     } catch (error) {
       tableIsLoading.value = false;
