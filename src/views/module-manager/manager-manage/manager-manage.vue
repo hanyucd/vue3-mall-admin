@@ -1,7 +1,7 @@
 <template>
   <el-card shadow="never" class="border-0">
     <!-- 搜索 -->
-    <SearchWrap :form-model="searchForm" @searchEvt="getTableDataFetch" @resetEvt="resetSearchForm">
+    <SearchWrap :form-model="searchForm" @searchEvt="getTableData" @resetEvt="resetSearchForm">
       <SearchItem label="关键词">
         <el-input v-model="searchForm.keyword" clearable placeholder="请输入管理员昵称搜索" />
       </SearchItem>
@@ -113,7 +113,7 @@ const {
   searchForm,
   resetSearchForm,
   switchChange,
-  getTableDataFetch,
+  getTableData,
   onTableCurPaginationChangeEvt,
   handleTableItemDelete
 } = useTableHook.useBaseTableHook({
@@ -121,9 +121,10 @@ const {
   getTableDataApi: proxy.$api.getManagerListApi,
   updateStatusApi: proxy.$api.updateManagerStatusApi,
   deleteApi: proxy.$api.deleteManagerApi,
+  // 回调函数
   onGetListSuccess: tableDataRes => {
     // console.log(tableDataRes);
-    // 赋值
+    // 管理员角色赋值
     managerRoles.value = tableDataRes.roles || [];
     tableDataList.value = tableDataRes.list.map(item => { item.isLoading = false; return item; });
     tableTotal.value = tableDataRes.totalCount;
@@ -156,10 +157,10 @@ const {
   createApi: proxy.$api.createManagerApi,
   updateApi: proxy.$api.updateManagerApi,
   tablePage,
-  getTableDataFetch,
+  getTableData,
 });
 
-getTableDataFetch();
+getTableData();
 
 </script>
 

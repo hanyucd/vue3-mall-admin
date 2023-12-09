@@ -2,7 +2,7 @@ import { reactive, ref, computed } from 'vue';
 import * as commonUtil from '@/common/utils';
 
 /**
- * 表格查询
+ * 表格查询、删除表格项、修改表格项状态
  */
 export const useBaseTableHook = (options = {}) => {
   const tableIsLoading = ref(false); // 表格数据是否加载
@@ -15,7 +15,6 @@ export const useBaseTableHook = (options = {}) => {
   // 重置搜索框
   let resetSearchForm = null;
 
-
   // 赋值搜索 双向绑定 表单值
   if (options.searchForm) {
     searchForm = reactive({ ...options.searchForm });
@@ -27,13 +26,12 @@ export const useBaseTableHook = (options = {}) => {
         }
       }
       // 重置后重新调取第一页数据
-      getTableDataFetch();
+      getTableData();
     };
   }
 
-
   // 获取目标表格数据
-  const getTableDataFetch = async (page = 1) => {
+  const getTableData = async (page = 1) => {
     tableIsLoading.value = true;
 
     const param = {
@@ -48,7 +46,8 @@ export const useBaseTableHook = (options = {}) => {
         options.onGetListSuccess(tableData);
       } else {
         tableTotal.value = tableData.totalCount;
-        tableDataList.value = tableData.list.map(item => { item.isLoading = false; return item; });
+        // tableDataList.value = tableData.list.map(item => { item.isLoading = false; return item; });
+        tableDataList.value = tableData.list;
       }
       
       // console.log('表格数据', tableData);
@@ -61,17 +60,17 @@ export const useBaseTableHook = (options = {}) => {
 
   // 表格底部分页器页码变化
   const onTableCurPaginationChangeEvt = page => {
-    getTableDataFetch(page);
+    getTableData(page);
   };
 
-  // 删除
+  // 删除表格项
   const handleTableItemDelete = tableRow => {
     tableIsLoading.value = true;
 
     const deleteItemId = tableRow.id;
     options.deleteApi(deleteItemId).then(res => {
       commonUtil.elNotify(`删除成功`);
-      getTableDataFetch(tablePage.value);
+      getTableData(tablePage.value);
     }).finally(() => {
       tableIsLoading.value = false;
     });
@@ -81,10 +80,10 @@ export const useBaseTableHook = (options = {}) => {
 const switchChange = (status, row) => {
   row.isLoading = true;
   options.updateStatusApi(row.id, { status }).then(res => {
-      commonUtil.elNotify(`修改状态成功`);
-      row.status = status;
+    commonUtil.elNotify(`修改状态成功`);
+    row.status = status;
   }).finally(() => {
-      row.isLoading = false;
+    row.isLoading = false;
   });
 };
 
@@ -95,7 +94,7 @@ const switchChange = (status, row) => {
     tableTotal,
     tableDataList,
     searchForm,
-    getTableDataFetch,
+    getTableData,
     resetSearchForm,
     switchChange,
     onTableCurPaginationChangeEvt,
@@ -104,7 +103,7 @@ const switchChange = (status, row) => {
 };
 
 /**
- * 表格操作行为
+ * 表格表单操作行为
  */
 export const useFormTableHook = (options = {}) => {
   // 编辑表格项 id
@@ -133,7 +132,7 @@ export const useFormTableHook = (options = {}) => {
   // 打开表单 drawer
   const openFormDrawer = () => formDrawerRef.value.openFormDrawer();
 
-  // 打开表单 drawer 提交事件
+  // 表单 drawer 提交事件
   const onFormDrawerSubmitEvt = () => {
     formRef.value.validate(valid => {
       if (!valid) return;
@@ -146,7 +145,7 @@ export const useFormTableHook = (options = {}) => {
 
         targetReqApi.then(res => {
           console.log(res);
-          options.getTableDataFetch(editTableItemId.value == 0 ? 1 : options.tablePage.value);
+          options.getTableData(editTableItemId.value == 0 ? 1 : options.tablePage.value);
 
           commonUtil.elNotify(`${ formDrawerTitle.value }成功`);
           formDrawerRef.value.closeFormDrawer();

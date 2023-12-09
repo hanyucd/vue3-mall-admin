@@ -60,7 +60,7 @@ const {
   tableLimit,
   tableTotal,
   tableDataList,
-  getTableDataFetch,
+  getTableData,
   onTableCurPaginationChangeEvt,
   handleTableItemDelete
 } = useTableHook.useBaseTableHook({
@@ -88,11 +88,11 @@ const {
   createApi: proxy.$api.createNoticeApi,
   updateApi: proxy.$api.updateNoticeApi,
   tablePage,
-  getTableDataFetch,
+  getTableData,
 });
 
 // 获取公告数据
-getTableDataFetch();
+getTableData();
 
 </script>
 
