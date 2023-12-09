@@ -57,4 +57,6 @@ export default {
   updateAccessRuleApi: (ruleId, param) => httpRequest(`/admin/rule/${ ruleId }`, param, 'post'),
   // 删除权限规则
   deleteAccessRuleApi: ruleId => httpRequest(`/admin/rule/${ ruleId }/delete`, {}, 'post'),
+  // 更新权限规则 状态
+  updateAccessRuleStatusApi: (ruleId, param) => httpRequest(`/admin/rule/${ ruleId }/update_status`, param, 'post'),
 };

@@ -3,6 +3,7 @@
     <el-icon v-if="modelValue" class="mr-2" :size="20">
       <component :is="modelValue" />
     </el-icon>
+    
     <el-select :model-value="modelValue" placeholder="请选择图标" clearable filterable @change="onSelectChange">
       <el-option v-for="item in iconOptions" :key="item" :label="item" :value="item">
         <div class="flex items-center justify-between overflow-hidden w-full">

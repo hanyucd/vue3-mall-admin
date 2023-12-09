@@ -2,7 +2,7 @@
   <el-card shadow="never" class=" border-0 h-full">
     <TableHeader @createEvt="openFormDrawer" @refreshEvt="getTableData(tablePage)" />
 
-    <el-tree v-loading="tableIsLoading" class="el-tree-container" :data="tableDataList" :props="treeProps" node-key="id" :default-expanded-keys="defaultExpandedKeys" @node-click="handleNodeClick">
+    <el-tree v-loading="tableIsLoading" class="el-tree-container" :data="tableDataList" :props="treeProps" node-key="id" :default-expanded-keys="defaultExpandedKeys">
       <!-- 自定义节点 -->
       <template #default="{ node, data }">
         <div class=" flex items-center flex-1">
@@ -12,10 +12,10 @@
           </el-icon>
           <span>{{ node.label }}</span>
           <div class="ml-auto mr-4">
-            <el-switch v-model="data.status" :active-value="1" :inactive-value="0" class="mr-3" :loading="data.isLoading" @change="switchChange($event, data)" />
-            <el-button type="primary" size="small" text @click.stop="handleEdit(data)">修改</el-button>
-            <el-button type="primary" size="small" text @click.stop="addChild(data.id)">增加</el-button>
-            <el-button type="primary" size="small" text @click.stop="handleDelete(data.id)">删除</el-button>
+            <el-switch :model-value="data.status" :active-value="1" :inactive-value="0" class="mr-3" :loading="data.isLoading" @change="switchChange($event, data)" />
+            <el-button type="primary" size="small" text @click.stop="handleEditTableItem(data)">修改</el-button>
+            <el-button type="primary" size="small" text @click.stop="addChildMenu(data)">增加</el-button>
+            <el-button type="primary" size="small" text @click.stop="handleTableItemDelete(data)">删除</el-button>
           </div>
         </div>
       </template>
@@ -91,18 +91,14 @@ const ruleOptions = ref([]);
 const {
   tableIsLoading,
   tablePage,
-  tableLimit,
-  tableTotal,
   tableDataList,
-  searchForm,
   getTableData,
-  resetSearchForm,
   switchChange,
-  onTableCurPaginationChangeEvt,
   handleTableItemDelete
 } = useTableHook.useBaseTableHook({
   getTableDataApi: proxy.$api.getAccessRuleLisApi,
-  deleteAccessRuleApi: proxy.$api.deleteManagerApi,
+  deleteApi: proxy.$api.deleteAccessRuleApi,
+  updateStatusApi: proxy.$api.updateAccessRuleStatusApi,
   onGetListSuccess: tableDataRes => {
     tableDataList.value = tableDataRes.list;
     defaultExpandedKeys.value = tableDataRes.list.map(item => item.id);
@@ -140,6 +136,14 @@ const {
 });
 
 getTableData();
+
+/**
+ * 直接添加子菜单
+ */
+const addChildMenu = ruleItem => {
+  tableFormData.rule_id = ruleItem.id;
+  openFormDrawer();
+};
 </script>
 
 <style lang="scss" scoped>
