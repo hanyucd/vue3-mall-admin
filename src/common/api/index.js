@@ -49,4 +49,12 @@ export default {
   updateManagerApi: (managerId, param) => httpRequest(`/admin/manager/${ managerId }`, param, 'post'),
   // 删除管理员
   deleteManagerApi: managerId => httpRequest(`/admin/manager/${ managerId }/delete`, {}, 'post'),
+  // 获取权限规则列表
+  getAccessRuleLisApi: page => httpRequest(`/admin/rule/${ page }`),
+  // 创建权限规则
+  createAccessRuleApi: param => httpRequest(`/admin/rule`, param, 'post'),
+  // 更新权限规则
+  updateAccessRuleApi: (ruleId, param) => httpRequest(`/admin/rule/${ ruleId }`, param, 'post'),
+  // 删除权限规则
+  deleteAccessRuleApi: ruleId => httpRequest(`/admin/rule/${ ruleId }/delete`, {}, 'post'),
 };

@@ -1,6 +1,6 @@
 <template>
   <el-card shadow="never" class="border-0">
-    <div @click="openFormDrawer">新增按钮</div>
+    <TableHeader @createEvt="openFormDrawer" @refreshEvt="getTableData(tablePage)" />
     
     <!-- 表格数据 -->
     <el-table v-loading="tableIsLoading" :data="tableDataList" border stripe>
@@ -48,6 +48,7 @@
 </template>
 
 <script setup>
+import TableHeader from '@/components/TableHeader/TableHeader.vue';
 import FormDrawer from '@/components/FormDrawer/FormDrawer.vue';
 import { reactive, getCurrentInstance } from 'vue';
 import * as useTableHook from '@/hooks/useTableHook';

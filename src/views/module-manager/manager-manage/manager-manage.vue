@@ -7,7 +7,7 @@
       </SearchItem>
     </SearchWrap>
     
-    <el-button type="primary" size="default" @click="openFormDrawer">新增</el-button>
+    <TableHeader @createEvt="openFormDrawer" @refreshEvt="getTableData(tablePage)" />
     
     <!-- 表格数据 -->
     <el-table v-loading="tableIsLoading" :data="tableDataList" border stripe>
@@ -92,6 +92,7 @@
 </template>
 
 <script setup>
+import TableHeader from '@/components/TableHeader/TableHeader.vue';
 import FormDrawer from '@/components/FormDrawer/FormDrawer.vue';
 import SearchWrap from '@/components/SearchWrap/SearchWrap.vue';
 import SearchItem from '@/components/SearchItem/SearchItem.vue';
@@ -123,7 +124,6 @@ const {
   deleteApi: proxy.$api.deleteManagerApi,
   // 回调函数
   onGetListSuccess: tableDataRes => {
-    // console.log(tableDataRes);
     // 管理员角色赋值
     managerRoles.value = tableDataRes.roles || [];
     tableDataList.value = tableDataRes.list.map(item => { item.isLoading = false; return item; });

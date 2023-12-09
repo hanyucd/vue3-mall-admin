@@ -110,15 +110,15 @@ export const asyncRouterMap = [
     component: () => import('@/views/module-manager/manager-manage/manager-manage.vue')
   },
   { 
+    path: '/access/list',
+    meta: { title: '权限管理' },
+    component: () => import('@/views/module-manager/access-manage/access-manage.vue')
+  },
+  { 
     path: '/role/list',
     meta: { title: '角色管理' },
     component: () => import('@/views/module-manager/role-manage/role-manage.vue')
   },
-  // { 
-  //   path: '/access/list',
-  //   meta: { title: '权限管理' },
-  //   component: () => import('~/pages/access/List.vue')
-  // },
   // { 
   //   path: '/skus/list',
   //   meta: { title: '规格管理' },

@@ -1,5 +1,5 @@
 <template>
-  <el-form :model="formModel">
+  <el-form :model="formModel" class=" mb-4">
     <el-row :gutter="20">
       <slot></slot>
       <el-col :span="8" :offset="showSearch ? 0 : 8 ">
