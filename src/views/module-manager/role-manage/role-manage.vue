@@ -177,7 +177,6 @@ const onAccessFormDrawerSubmitEvt = () => {
     console.log('选择', checkedKeys);
     console.log('未选的父节点', halfCheckedKeys);
     
-    
     proxy.$api.setRoleAccessApi({
       id: roleId.value,
       rule_ids: [...checkedKeys, ...halfCheckedKeys]
