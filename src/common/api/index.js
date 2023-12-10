@@ -59,4 +59,16 @@ export default {
   deleteAccessRuleApi: ruleId => httpRequest(`/admin/rule/${ ruleId }/delete`, {}, 'post'),
   // 更新权限规则 状态
   updateAccessRuleStatusApi: (ruleId, param) => httpRequest(`/admin/rule/${ ruleId }/update_status`, param, 'post'),
+  // 获取角色列表
+  getRoleLisApi: page => httpRequest(`/admin/role/${ page }`),
+  // 创建角色
+  createRoleApi: param => httpRequest(`/admin/role`, param, 'post'),
+  // 更新角色
+  updateRoleApi: (roleId, param) => httpRequest(`/admin/role/${ roleId }`, param, 'post'),
+  // 删除角色
+  deleteRoleApi: roleId => httpRequest(`/admin/role/${ roleId }/delete`, {}, 'post'),
+  // 更新角色 状态
+  updateRoleStatusApi: (roleId, param) => httpRequest(`/admin/role/${ roleId }/update_status`, param, 'post'),
+  // 创建角色权限
+  setRoleAccessApi: param => httpRequest(`/admin/role/set_rules`, param, 'post'),
 };
