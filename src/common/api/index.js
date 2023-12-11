@@ -91,4 +91,15 @@ export default {
   deleteCouponApi: couponId => httpRequest(`/admin/coupon/${ couponId }/delete`, {}, 'post'),
   // 更新优惠券 状态
   updateCouponStatusApi: (couponId, param) => httpRequest(`/admin/coupon/${ couponId }/update_status`, param, 'post'),
+
+  // 获取商品列表
+  getGoodsLisApi: (page, param) => httpRequest(`/admin/goods/${ page }`, param),
+  // 创建商品
+  createGoodsApi: param => httpRequest(`/admin/goods`, param, 'post'),
+  // 更新商品
+  updateGoodsApi: (goodsId, param) => httpRequest(`/admin/goods/${ goodsId }`, param, 'post'),
+  // 批量删除商品
+  batchDeleteGoodsApi: param => httpRequest(`/admin/goods/delete_all`, param, 'post'),
+  // 批量更新商品 上下架状态
+  batchUpdateGoodsStatusApi: param => httpRequest(`/admin/goods/changestatus`, param, 'post'),
 };
