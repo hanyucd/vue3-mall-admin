@@ -1,5 +1,5 @@
 <template>
-  <el-drawer v-model="isShowDrawer" :title="title" :destroy-on-close="destroyOnClose" @close="onElDrawerCloseEvt">
+  <el-drawer v-model="isShowDrawer" :title="title" :size="size" :destroy-on-close="destroyOnClose" @close="onElDrawerCloseEvt">
     <div class="form-drawer-body">
       <div class="form-drawer-main">
         <slot></slot>
@@ -18,7 +18,7 @@ import { ref } from 'vue';
 
 defineProps({
   title: String,
-  size: { type: String, default: '40%' },
+  size: { type: String, default: '36%' },
   confirmText: { type: String, default: '提交' },
   destroyOnClose: { type: Boolean, default: false }
 });

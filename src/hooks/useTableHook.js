@@ -180,6 +180,11 @@ export const useFormTableHook = (options = {}) => {
     formRef.value.validate(valid => {
       if (!valid) return;
 
+      // 提交之前 将数据传入回调函数中
+      if (options.beforeSubmit && typeof options.beforeSubmit == 'function') {
+        Object.assign(tableFormData, options.beforeSubmit(tableFormData)); 
+      }
+      
       formDrawerRef.value.showSubmitBtnLoading();
       // 目标接口 新增/编辑
       const targetReqApi = editTableItemId.value == 0
