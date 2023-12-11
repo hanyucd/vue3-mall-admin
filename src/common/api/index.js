@@ -81,4 +81,14 @@ export default {
   batchDeleteSkuApi: param => httpRequest(`/admin/skus/delete_all`, param, 'post'),
   // 更新规格 状态
   updateSkuStatusApi: (skuId, param) => httpRequest(`/admin/skus/${ skuId }/update_status`, param, 'post'),
+  // 获取优惠券列表
+  getCouponLisApi: page => httpRequest(`/admin/coupon/${ page }`),
+  // 创建优惠券
+  createCouponApi: param => httpRequest(`/admin/coupon`, param, 'post'),
+  // 更新优惠券
+  updateCouponApi: (couponId, param) => httpRequest(`/admin/coupon/${ couponId }`, param, 'post'),
+  // 删除优惠券
+  deleteCouponApi: couponId => httpRequest(`/admin/coupon/${ couponId }/delete`, {}, 'post'),
+  // 更新优惠券 状态
+  updateCouponStatusApi: (couponId, param) => httpRequest(`/admin/coupon/${ couponId }/update_status`, param, 'post'),
 };

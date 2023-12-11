@@ -1,0 +1,6 @@
+.coupon-active {
+  @apply border-rose-200 bg-rose-50 text-blue-400;
+}
+.coupon-inactive {
+  @apply border-gray-200 bg-gray-50 text-gray-400;
+}
