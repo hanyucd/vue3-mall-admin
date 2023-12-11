@@ -1,9 +1,11 @@
 <template>
   <el-card shadow="never" class="border-0">
-    <TableHeader @createEvt="openFormDrawer" @refreshEvt="getTableData(tablePage)" />
+    <TableHeader btn-list="create, refresh, delete" @createEvt="openFormDrawer" @deleteEvt="handleBatchTableItemDelete" @refreshEvt="getTableData(tablePage)" />
 
     <!-- 表格数据 -->
-    <el-table v-loading="tableIsLoading" :data="tableDataList" border stripe>
+    <el-table ref="tableRef" v-loading="tableIsLoading" :data="tableDataList" border stripe @selection-change="handleTableSelectionChangeEvt">
+      <el-table-column type="selection" width="55" />
+
       <el-table-column prop="name" label="规格名称" align="center" />
       
       <el-table-column prop="default" label="规格值" align="center" />
@@ -78,12 +80,11 @@ const {
   tableLimit,
   tableTotal,
   tableDataList,
-  searchForm,
-  resetSearchForm,
+  tableRef,
   switchChange,
   getTableData,
   onTableCurPaginationChangeEvt,
-  handleTableItemDelete,
+  handleTableSelectionChangeEvt,
   handleBatchTableItemDelete
 } = useTableHook.useBaseTableHook({
   getTableDataApi: proxy.$api.getSkuLisApi,

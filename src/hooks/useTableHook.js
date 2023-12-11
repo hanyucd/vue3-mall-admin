@@ -76,21 +76,42 @@ export const useBaseTableHook = (options = {}) => {
     });
   };
 
-  // 选中表格项
+  // 表格 引用
+  const tableRef = ref(null);
+  // 选中的表格项 id
   const selectTabItemIds = ref([]);
-  // 选中的id
+  
+  // 当表格选择项发生变化时会触发该事件
+  const handleTableSelectionChangeEvt = tableItems => {
+    selectTabItemIds.value = tableItems.map(item => item.id);
+  };
 
   // 批量删除表格项
   const handleBatchTableItemDelete = (tableRow = {}) => {
     const deleteItemId = tableRow.id;
-    
+
     if (deleteItemId) {
+      tableIsLoading.value = true;
       options.batchDeleteApi({ ids: [deleteItemId] }).then(res => {
         commonUtil.elNotify(`删除成功`);
         getTableData(tablePage.value);
+      }).finally(() => {
+        tableIsLoading.value = false;
       });
     } else {
-      console.log('批量删除');
+      // console.log('批量删除', selectTabItemIds.value);
+      if (!selectTabItemIds.value.length) return commonUtil.elNotify(`请先选择待删除表格项`, 'error');
+      tableIsLoading.value = true;
+
+      options.batchDeleteApi({ ids: selectTabItemIds.value }).then(res => {
+        commonUtil.elNotify(`删除成功`);
+        
+        getTableData(tablePage.value);
+        tableRef.value.clearSelection();
+        selectTabItemIds.value = [];
+      }).finally(() => {
+        tableIsLoading.value = false;
+      });
     }
   };
 
@@ -113,10 +134,12 @@ export const useBaseTableHook = (options = {}) => {
     tableDataList,
     searchForm,
     selectTabItemIds,
+    tableRef,
     getTableData,
     resetSearchForm,
     switchChange,
     onTableCurPaginationChangeEvt,
+    handleTableSelectionChangeEvt,
     handleTableItemDelete,
     handleBatchTableItemDelete
   };
