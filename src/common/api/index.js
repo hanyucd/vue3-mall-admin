@@ -71,4 +71,14 @@ export default {
   updateRoleStatusApi: (roleId, param) => httpRequest(`/admin/role/${ roleId }/update_status`, param, 'post'),
   // 创建角色权限
   setRoleAccessApi: param => httpRequest(`/admin/role/set_rules`, param, 'post'),
+  // 获取规格列表
+  getSkuLisApi: page => httpRequest(`/admin/skus/${ page }`),
+  // 创建规格
+  createSkuApi: param => httpRequest(`/admin/skus`, param, 'post'),
+  // 更新规格
+  updateSkuApi: (skuId, param) => httpRequest(`/admin/skus/${ skuId }`, param, 'post'),
+  // 批量删除规格
+  batchDeleteSkuApi: param => httpRequest(`/admin/skus/delete_all`, param, 'post'),
+  // 更新规格 状态
+  updateSkuStatusApi: (skuId, param) => httpRequest(`/admin/skus/${ skuId }/update_status`, param, 'post'),
 };

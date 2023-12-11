@@ -45,6 +45,11 @@ export const asyncRouterMap = [
     component: () => import('@/views/module-goods/category-manage/category-manage.vue')
   },
   { 
+    path: '/skus/list',
+    meta: { title: '规格管理' },
+    component: () => import('@/views/module-goods/sku-manage/sku-manage.vue')
+  },
+  { 
     path: '/coupon/list',
     meta: { title: '优惠券' },
     component: () => import('@/views/module-goods/coupon-manage/coupon-manage.vue')
@@ -119,11 +124,6 @@ export const asyncRouterMap = [
     meta: { title: '角色管理' },
     component: () => import('@/views/module-manager/role-manage/role-manage.vue')
   },
-  // { 
-  //   path: '/skus/list',
-  //   meta: { title: '规格管理' },
-  //   component: () => import('~/pages/skus/List.vue')
-  // },
   // { 
   //   path: '/distribution/index',
   //   meta: { title: '分销员管理' },

@@ -74,18 +74,36 @@ export const useBaseTableHook = (options = {}) => {
     }).finally(() => {
       tableIsLoading.value = false;
     });
-};
+  };
 
-// switch状态切换
-const switchChange = (status, row) => {
-  row.isLoading = true;
-  options.updateStatusApi(row.id, { status }).then(res => {
-    commonUtil.elNotify(`修改状态成功`);
-    row.status = status;
-  }).finally(() => {
-    row.isLoading = false;
-  });
-};
+  // 选中表格项
+  const selectTabItemIds = ref([]);
+  // 选中的id
+
+  // 批量删除表格项
+  const handleBatchTableItemDelete = (tableRow = {}) => {
+    const deleteItemId = tableRow.id;
+    
+    if (deleteItemId) {
+      options.batchDeleteApi({ ids: [deleteItemId] }).then(res => {
+        commonUtil.elNotify(`删除成功`);
+        getTableData(tablePage.value);
+      });
+    } else {
+      console.log('批量删除');
+    }
+  };
+
+  // switch状态切换
+  const switchChange = (status, row) => {
+    row.isLoading = true;
+    options.updateStatusApi(row.id, { status }).then(res => {
+      commonUtil.elNotify(`修改状态成功`);
+      row.status = status;
+    }).finally(() => {
+      row.isLoading = false;
+    });
+  };
 
   return {
     tableIsLoading,
@@ -94,11 +112,13 @@ const switchChange = (status, row) => {
     tableTotal,
     tableDataList,
     searchForm,
+    selectTabItemIds,
     getTableData,
     resetSearchForm,
     switchChange,
     onTableCurPaginationChangeEvt,
-    handleTableItemDelete
+    handleTableItemDelete,
+    handleBatchTableItemDelete
   };
 };
 
