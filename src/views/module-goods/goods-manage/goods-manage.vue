@@ -10,6 +10,14 @@
         <SearchItem label="关键词">
           <el-input v-model="searchForm.title" clearable placeholder="请输入商品名称" />
         </SearchItem>
+        <!-- 具名插槽 -->
+        <template #more>
+          <SearchItem label="商品分类">
+            <el-select v-model="searchForm.category_id" placeholder="请选择商品分类" clearable>
+              <el-option v-for="item in category_list" :key="item.id" :label="item.name" :value="item.id" />
+            </el-select>
+          </SearchItem>
+        </template>
       </SearchWrap>
       
       <TableHeader @createEvt="openFormDrawer" @refreshEvt="getTableData(tablePage)" />
@@ -18,42 +26,59 @@
       <el-table v-loading="tableIsLoading" :data="tableDataList" border stripe>
         <el-table-column type="selection" width="55" />
   
-        <!-- 管理员 -->
-        <el-table-column label="管理员" width="300">
+        <el-table-column label="商品" width="300">
           <template #default="{ row }">
+            <h5 class="font-md font-bold text-dark-300">{{ row.title }}</h5>
             <div class="flex items-center">
-              <el-avatar :size="40" :src="row.avatar">
-                <img src="https://cube.elemecdn.com/9/c2/f0ee8a3c7c9638a54940382568c9dpng.png" />
-              </el-avatar>
-              <div class="ml-2 leading-normal">
-                <h3>{{ row.username }}</h3>
-                <small class="mt-1">ID: {{ row.id }}</small>
+              <el-image class="mr-3 rounded" :src="row.cover" fit="cover" :lazy="true" style="width: 50px;height: 50px;" />
+              <div class="flex-1">
+                <div>
+                  <span class="text-rose-500 text-xs font-bold">￥{{ row.min_price }}</span>
+                  <el-divider direction="vertical" />
+                  <span class="text-gray-500 text-xs">￥{{ row.min_oprice }}</span>
+                </div>
+                <p class="text-gray-400 text-xs mb-1">分类: {{ row.category ? row.category.name : '未分类' }}</p>
+                <p class="text-gray-400 text-xs">创建时间: {{ row.create_time }}</p>
               </div>
             </div>
           </template>
         </el-table-column>
         
         <el-table-column label="实际销量" width="100" prop="sale_count" align="center" />
-  
-        <el-table-column prop="stock" label="总库存" width="110" align="center" />
-  
-        <el-table-column label="状态" align="center">
+
+        <el-table-column label="商品状态" width="100" align="center">
           <template #default="{ row }">
-            <el-switch :disabled="row.super == 1" :model-value="row.status" :active-value="1" :inactive-value="0" :loading="row.isLoading" @change="switchChange($event, row)" />
+            <el-tag :type="row.status ? 'success' : 'danger'" size="small">{{ row.status ? '上架' : '仓库' }}</el-tag>
+          </template>
+        </el-table-column>
+
+        <el-table-column v-if="searchForm.tab != 'delete'" label="审核状态" width="100" align="center">
+          <template #default="{ row }">
+            <div v-if="row.ischeck == 0">
+              <el-button type="success" size="small" plain @click="CheckGoodsStatus(row, 1)">审核通过</el-button>
+              <el-button class="mt-1" type="danger" size="small" plain style="margin-left: 0 !important;" @click="CheckGoodsStatus(row, 2)">审核拒绝</el-button>
+            </div>
+            <el-tag v-else-if="row.ischeck == 1" type="success" size="small" effect="plain">通过</el-tag>
+            <el-tag v-else type="danger" size="small" effect="plain">拒绝</el-tag>
           </template>
         </el-table-column>
   
-        <el-table-column label="操作" width="260" align="center">
+        <el-table-column prop="stock" label="总库存" align="center" />
+  
+        <el-table-column label="操作" align="right">
           <template #default="scope">
-            <small v-if="scope.row.super == 1" class="text-gray-500">暂无操作</small>
-            <div v-else>
-              <el-button size="small" type="primary" @click="handleEditTableItem(scope.row)">修改</el-button>
-              <el-popconfirm title="是否删除该角色?" width="160" confirm-button-text="删除" cancel-button-text="取消" @confirm="handleTableItemDelete(scope.row)">
+            <div v-if="searchForm.tab != 'delete'">
+              <el-button class="px-1" size="small" type="primary" @click="handleEdit(scope.row)"> 修改 </el-button>
+              <!-- <el-button class="px-1" size="small" :type="isSetSku(scope.row)" :loading="scope.row.skusLoading" @click="handleSetGoodsSkus(scope.row)">商品规格</el-button> -->
+              <el-button class="px-1" size="small" :type="scope.row.goods_banner.length == 0 ? 'danger' : 'primary'" :loading="scope.row.bannersLoading" @click="handleSetGoodsBanners(scope.row)">设置轮播图</el-button>
+              <el-button class="px-1" size="small" :type="!scope.row.content ? 'danger' : 'primary'" :loading="scope.row.contentLoading" @click="handleSetGoodsContent(scope.row)">商品详情</el-button>
+              <el-popconfirm title="是否删除该商品?" width="160" confirm-button-text="删除" cancel-button-text="取消" @confirm="handleMultiDelete(scope.row.id)">
                 <template #reference>
                   <el-button size="small" type="danger">删除</el-button>
                 </template>
               </el-popconfirm>
             </div>
+            <sapn v-else>暂无操作</sapn>
           </template>
         </el-table-column>
       </el-table>
@@ -194,6 +219,11 @@ const onTabChangeEvt = activeTabName => {
   getTableData();
 };
 
+// 分类列表
+const category_list = ref([]);
+proxy.$api.getGoodsCategoryLisApi().then(res => {
+  category_list.value = res.data;
+});
 </script>
 
 <style lang="scss" scoped>
