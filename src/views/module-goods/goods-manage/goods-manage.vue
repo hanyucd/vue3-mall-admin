@@ -14,16 +14,28 @@
         <template #more>
           <SearchItem label="商品分类">
             <el-select v-model="searchForm.category_id" placeholder="请选择商品分类" clearable>
-              <el-option v-for="item in category_list" :key="item.id" :label="item.name" :value="item.id" />
+              <el-option v-for="item in categoryList" :key="item.id" :label="item.name" :value="item.id" />
             </el-select>
           </SearchItem>
         </template>
       </SearchWrap>
       
-      <TableHeader @createEvt="openFormDrawer" @refreshEvt="getTableData(tablePage)" />
+      <!-- 头部 -->
+      <TableHeader btn-list="create, refresh, delete" title="商品" @createEvt="openFormDrawer" @refreshEvt="getTableData(tablePage)" @deleteEvt="handleBatchTableItemDelete">
+        <el-button v-if="searchForm.tab == 'delete'" type="warning" @click="handleMultiRestore">恢复商品</el-button>
+
+        <el-popconfirm v-if="searchForm.tab == 'delete'" title="是否彻底删除该商品?" width="170" confirm-button-text="删除" cancel-button-text="取消" @confirm="handleMultiDestroy">
+          <template #reference>
+            <el-button type="danger">彻底删除</el-button>
+          </template>
+        </el-popconfirm>
+        
+        <el-button v-if="searchForm.tab == 'all' || searchForm.tab == 'off'" @click="handleGoodsPutaway(1)">上架</el-button>
+        <el-button v-if="searchForm.tab == 'all' || searchForm.tab == 'saling'" @click="handleGoodsPutaway(0)">下架</el-button>
+      </TableHeader>
       
       <!-- 表格数据 -->
-      <el-table v-loading="tableIsLoading" :data="tableDataList" border stripe>
+      <el-table v-loading="tableIsLoading" :data="tableDataList" border stripe @selection-change="handleTableSelectionChangeEvt">
         <el-table-column type="selection" width="55" />
   
         <el-table-column label="商品" width="300">
@@ -68,7 +80,7 @@
         <el-table-column label="操作" align="right">
           <template #default="scope">
             <div v-if="searchForm.tab != 'delete'">
-              <el-button class="px-1" size="small" type="primary" @click="handleEdit(scope.row)"> 修改 </el-button>
+              <el-button class="px-1" size="small" type="primary" @click="handleEditTableItem(scope.row)">修改</el-button>
               <!-- <el-button class="px-1" size="small" :type="isSetSku(scope.row)" :loading="scope.row.skusLoading" @click="handleSetGoodsSkus(scope.row)">商品规格</el-button> -->
               <el-button class="px-1" size="small" :type="scope.row.goods_banner.length == 0 ? 'danger' : 'primary'" :loading="scope.row.bannersLoading" @click="handleSetGoodsBanners(scope.row)">设置轮播图</el-button>
               <el-button class="px-1" size="small" :type="!scope.row.content ? 'danger' : 'primary'" :loading="scope.row.contentLoading" @click="handleSetGoodsContent(scope.row)">商品详情</el-button>
@@ -97,28 +109,65 @@
       <!-- 表单Drawer -->
       <FormDrawer ref="formDrawerRef" :title="formDrawerTitle" destroy-on-close @formDrawerSubmitEvt="onFormDrawerSubmitEvt" @formDrawerCloseEvt="onFormDrawerCloseEvt">
         <el-form ref="formRef" :model="tableFormData" :rules="tableFormRules" label-width="80px" :inline="false" size="default">
-          <el-form-item label="头像" prop="avatar">
-            <!-- 组件 v-model 实现双向绑定 -->
-            <ChooseImage v-model="tableFormData.avatar" />
+          <el-form-item label="商品名称" prop="title">
+            <el-input v-model="tableFormData.title" placeholder="请输入商品名称" class="mr-5" />
           </el-form-item>
-          
-          <el-form-item label="用户名" prop="username">
-            <el-input v-model="tableFormData.username" placeholder="请输入用户名" />
-          </el-form-item>
-  
-          <el-form-item label="密码" prop="password">
-            <el-input v-model="tableFormData.password" placeholder="请输入密码" show-password />
-          </el-form-item>
-  
-          <el-form-item label="角色" prop="role_id">
-            <el-select v-model="tableFormData.role_id" placeholder="请选择角色" clearable filterable>
-              <el-option label="--请选择角色--" value="--" disabled />
-              <el-option v-for="item in managerRoles" :key="item.id" :label="item.name" :value="item.id" />
+
+          <el-form-item label="商品分类" prop="category_id">
+            <el-select v-model="tableFormData.category_id" placeholder="请选择商品分类" clearable filterable>
+              <el-option label="--请选择商品分类--" value="--" disabled />
+              <el-option v-for="item in categoryList" :key="item.id" :label="item.name" :value="item.id" />
             </el-select>
           </el-form-item>
+
+          <el-form-item label="商品封面" prop="cover">
+            <ChooseImage v-model="tableFormData.cover" />
+          </el-form-item>
+
+          <el-form-item label="描述" prop="desc">
+            <el-input v-model="tableFormData.desc" placeholder="请输入商品描述" type="textarea" :rows="4" class="mr-5" />
+          </el-form-item>
           
-          <el-form-item label="是否启用" prop="status">
-            <el-switch v-model="tableFormData.status" :active-value="1" :inactive-value="0" />
+          <el-form-item label="商品单位" prop="unit">
+            <el-input v-model="tableFormData.unit" placeholder="请输入商品单位" class="mr-5" />
+          </el-form-item>
+          
+          <el-form-item label="总库存" prop="stock">
+            <el-input v-model="tableFormData.stock" type="number" style="max-width: 300px">
+              <template #append>{{ tableFormData.unit }}</template>
+            </el-input>
+          </el-form-item>
+
+          <el-form-item label="库存预警" prop="min_stock">
+            <el-input v-model="tableFormData.min_stock" type="number" style="max-width: 300px">
+              <template #append>{{ tableFormData.unit }}</template>
+            </el-input>
+          </el-form-item>
+
+          <el-form-item label="最低销售价" prop="min_price">
+            <el-input v-model="tableFormData.min_price" type="number" style="max-width: 300px">
+              <template #append>元</template>
+            </el-input>
+          </el-form-item>
+
+          <el-form-item label="最低原价" prop="min_oprice">
+            <el-input v-model="tableFormData.min_oprice" type="number" style="max-width: 300px">
+              <template #append>元</template>
+            </el-input>
+          </el-form-item>
+
+          <el-form-item label="是否上架" prop="status">
+            <el-radio-group v-model="tableFormData.status">
+              <el-radio :label="0" border>存放仓库</el-radio>
+              <el-radio :label="1" border>立即上架</el-radio>
+            </el-radio-group>
+          </el-form-item>
+
+          <el-form-item label="库存显示" prop="stock_display">
+            <el-radio-group v-model="tableFormData.stock_display">
+              <el-radio :label="0" border>隐藏</el-radio>
+              <el-radio :label="1" border>显示</el-radio>
+            </el-radio-group>
           </el-form-item>
         </el-form>
       </FormDrawer>
@@ -146,12 +195,16 @@ const {
   tableLimit,
   tableTotal,
   tableDataList,
+  tableRef,
+  selectTabItemIds,
   searchForm,
   resetSearchForm,
   switchChange,
   getTableData,
   onTableCurPaginationChangeEvt,
-  handleTableItemDelete
+  handleTableSelectionChangeEvt,
+  handleTableItemDelete,
+  handleBatchTableItemDelete,
 } = useTableHook.useBaseTableHook({
   searchForm: {
     title: '',
@@ -161,6 +214,7 @@ const {
   getTableDataApi: proxy.$api.getGoodsLisApi,
   updateStatusApi: proxy.$api.updateManagerStatusApi,
   deleteApi: proxy.$api.deleteManagerApi,
+  batchDeleteApi: proxy.$api.batchDeleteGoodsApi,
   // 回调函数
   onGetListSuccess: tableDataRes => {
     // 管理员角色赋值
@@ -183,18 +237,23 @@ const {
   handleEditTableItem
 } = useTableHook.useFormTableHook({
   formData: {
-    username: '',
-    password: '',
-    role_id: '',
+    title: '',
+    category_id: null,
+    cover: '',
+    desc: '',
+    unit: '件',
+    stock: 0,
+    min_stock: 0,
     status: 1,
-    avatar: ''
+    stock_display: 1,
+    min_price: 0,
+    min_oprice: 0
   },
   formRules: {
-    username: [ { required: true, message: '请填写用户名', trigger: 'blur' } ],
-    password: [ { required: true, message: '请填写密码', trigger: 'blur' } ]
+    title: [ { required: true, message: '请填写商品名称', trigger: 'blur' } ],
   },
-  createApi: proxy.$api.createManagerApi,
-  updateApi: proxy.$api.updateManagerApi,
+  createApi: proxy.$api.createGoodsApi,
+  updateApi: proxy.$api.updateGoodsApi,
   tablePage,
   getTableData,
 });
@@ -219,11 +278,41 @@ const onTabChangeEvt = activeTabName => {
   getTableData();
 };
 
-// 分类列表
-const category_list = ref([]);
+// 商品分类列表
+const categoryList = ref([]);
 proxy.$api.getGoodsCategoryLisApi().then(res => {
-  category_list.value = res.data;
+  categoryList.value = res.data;
 });
+
+// 处理多选行为 | 复用函数
+const _handleMultiAction = (api, params, isClear = false) => {
+  return new Promise((resolve, reject) => {
+    tableIsLoading.value = true;
+    api(params).then(res => {
+      if (isClear) {
+        if (tableRef.value) {
+          tableRef.value.clearSelection();
+        }
+        selectTabItemIds.value = [];
+      }
+      resolve(res);
+      getTableData(tablePage.value);
+    }).finally(() => {
+      tableIsLoading.value = false;
+    });
+  });
+};
+
+/**
+ * 处理商品上下架
+ */
+const handleGoodsPutaway = status => {
+  if (!selectTabItemIds.value.length) return proxy.$commonUtil.elNotify(`请先选择商品项`, 'warning');
+
+  _handleMultiAction(proxy.$api.batchUpdateGoodsStatusApi, { ids: selectTabItemIds.value, status }, true).then(res => {
+    proxy.$commonUtil.elNotify(status ? `上架成功` : '下架成功');
+  });
+};
 </script>
 
 <style lang="scss" scoped>

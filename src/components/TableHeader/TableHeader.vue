@@ -10,6 +10,7 @@
           <el-button size="default" type="danger">批量删除</el-button>
         </template>
       </el-popconfirm>
+      <slot></slot>
     </div>
 
     <div class="flex items-center ml-auto">
