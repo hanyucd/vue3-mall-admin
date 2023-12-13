@@ -2,14 +2,14 @@
   <div v-if="showBtn" class="flex items-center flex-wrap">
     <template v-if="modelValue">
       <el-image v-if="(typeof modelValue == 'string')" :src="modelValue" fit="cover" :lazy="true" class="border w-[100px] h-[100px] rounded mx-1 mb-2" />
-      <!-- <template v-else>
+      <template v-else>
         <div v-for="(url, index) in modelValue" :key="index" class="relative flex flex-wrap w-[100px] h-[100px] mx-1 mb-2">
           <el-icon class="bg-white rounded-full text-md absolute top-[5px] right-[5px] z-10 " @click="removeImage(url)">
             <CircleClose />
           </el-icon>
           <el-image :src="url" fit="cover" :lazy="true" class="border w-[100px] h-[100px] rounded " />
         </div>
-      </template> -->
+      </template>
     </template>
     <div class="choose-image-btn mx-1 mb-2" @click="openImageDialog">
       <el-icon class="text-gray-500" size="25"><Plus /></el-icon>

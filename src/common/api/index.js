@@ -96,12 +96,14 @@ export default {
   getGoodsLisApi: (page, param) => httpRequest(`/admin/goods/${ page }`, param),
   // 创建商品
   createGoodsApi: param => httpRequest(`/admin/goods`, param, 'post'),
-  // 更新商品
-  updateGoodsApi: (goodsId, param) => httpRequest(`/admin/goods/${ goodsId }`, param, 'post'),
   // 批量删除商品
   batchDeleteGoodsApi: param => httpRequest(`/admin/goods/delete_all`, param, 'post'),
   // 批量更新商品 上下架状态
   batchUpdateGoodsStatusApi: param => httpRequest(`/admin/goods/changestatus`, param, 'post'),
   // 获取商品分类列表
   getGoodsCategoryLisApi: () => httpRequest(`/admin/category`),
+  // 获取商品详情信息
+  getGoodsDetailApi: goodsId => httpRequest(`/admin/goods/read/${ goodsId }`),
+  // 更新商品轮播图
+  updateGoodBannerApi: (goodsId, param) => httpRequest(`/admin/goods/banners/${ goodsId }`, param, 'post'),
 };
