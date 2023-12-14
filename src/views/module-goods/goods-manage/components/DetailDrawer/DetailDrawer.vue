@@ -1,7 +1,7 @@
 <template>
-  <form-drawer ref="formDrawerRef" title="设置商品详情" size="50%" destroy-on-close @formDrawerSubmitEvt="onFormDrawerSubmitEvt" @formDrawerCloseEvt="onFormDrawerCloseEvt">
+  <FormDrawer ref="formDrawerRef" title="设置商品详情" size="50%" destroy-on-close @formDrawerSubmitEvt="onFormDrawerSubmitEvt" @formDrawerCloseEvt="onFormDrawerCloseEvt">
     <Editor v-model="detailForm.content" />
-  </form-drawer>
+  </FormDrawer>
 </template>
 
 <script setup>

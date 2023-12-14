@@ -81,7 +81,7 @@
           <template #default="scope">
             <div v-if="searchForm.tab != 'delete'">
               <el-button class="px-1" size="small" type="primary" @click="handleEditTableItem(scope.row)">修改</el-button>
-              <!-- <el-button class="px-1" size="small" :type="isSetSku(scope.row)" :loading="scope.row.skusLoading" @click="handleSetGoodsSkus(scope.row)">商品规格</el-button> -->
+              <el-button class="px-1" size="small" :type="isSetSku(scope.row)" :loading="scope.row.skusLoading" @click="openUpdateSkuDrawer(scope.row)">商品规格</el-button>
               <el-button class="px-1" size="small" :type="scope.row.goods_banner.length ? 'primary' : 'danger'" :loading="scope.row.bannersLoading" @click="openUpdateBannerDrawer(scope.row)">设置轮播图</el-button>
               <el-button class="px-1" size="small" :type="!(scope.row.content) ? 'danger' : 'primary'" :loading="scope.row.contentLoading" @click="openUpdateDetailDrawer(scope.row)">商品详情</el-button>
               <el-popconfirm title="是否删除该商品?" width="160" confirm-button-text="删除" cancel-button-text="取消" @confirm="handleMultiDelete(scope.row.id)">
@@ -175,6 +175,7 @@
 
     <BannerDrawer ref="bannerDrawerRef" @reloadDataEvt="getTableData(tablePage)" />
     <DetailDrawer ref="detailDrawerRef" @reloadDataEvt="getTableData(tablePage)" />
+    <SkuDrawer ref="skuDrawerRef" @reloadDataEvt="getTableData(tablePage)" />
   </div>
 </template>
 
@@ -186,6 +187,7 @@ import SearchItem from '@/components/SearchItem/SearchItem.vue';
 import ChooseImage from '@/components/ChooseImage/ChooseImage.vue';
 import BannerDrawer from './components/BannerDrawer/BannerDrawer.vue';
 import DetailDrawer from './components/DetailDrawer/DetailDrawer.vue';
+import SkuDrawer from './components/SkuDrawer/SkuDrawer.vue';
 
 import { ref, getCurrentInstance } from 'vue';
 import * as useTableHook from '@/hooks/useTableHook';
@@ -332,6 +334,21 @@ const detailDrawerRef = ref(null);
  */
 const openUpdateDetailDrawer = tableItem => {
   detailDrawerRef.value.openDetailDrawer(tableItem);
+};
+
+// 判断商品规格是否设置了
+const isSetSku = (item) => {
+  return (item.sku_type == 0 && item.sku_value && Object.keys(item.sku_value).length > 0) 
+      || (item.sku_type == 1 && item.goods_skus && item.goods_skus.length > 0) ? 'primary' : 'danger';
+};
+
+
+const skuDrawerRef = ref(null);
+/**
+ * 打开更新商品规格 drawer
+ */
+const openUpdateSkuDrawer = tableItem => {
+  skuDrawerRef.value.openSkuDrawer(tableItem);
 };
 </script>
 

@@ -108,4 +108,6 @@ export default {
   updateGoodBannerApi: (goodsId, param) => httpRequest(`/admin/goods/banners/${ goodsId }`, param, 'post'),
   // 更新商品信息
   updateGoodsApi: (goodsId, param) => httpRequest(`/admin/goods/${ goodsId }`, param, 'post'),
+  // 更新商品规格信息
+  updateGoodsSkuApi: (goodsId, param) => httpRequest(`/admin/goods/updateskus/${ goodsId }`, param, 'post'),
 };
