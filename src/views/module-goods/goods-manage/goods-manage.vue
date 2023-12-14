@@ -83,7 +83,7 @@
               <el-button class="px-1" size="small" type="primary" @click="handleEditTableItem(scope.row)">修改</el-button>
               <!-- <el-button class="px-1" size="small" :type="isSetSku(scope.row)" :loading="scope.row.skusLoading" @click="handleSetGoodsSkus(scope.row)">商品规格</el-button> -->
               <el-button class="px-1" size="small" :type="scope.row.goods_banner.length ? 'primary' : 'danger'" :loading="scope.row.bannersLoading" @click="openUpdateBannerDrawer(scope.row)">设置轮播图</el-button>
-              <el-button class="px-1" size="small" :type="!(scope.row.content) ? 'danger' : 'primary'" :loading="scope.row.contentLoading" @click="handleSetGoodsContent(scope.row)">商品详情</el-button>
+              <el-button class="px-1" size="small" :type="!(scope.row.content) ? 'danger' : 'primary'" :loading="scope.row.contentLoading" @click="openUpdateDetailDrawer(scope.row)">商品详情</el-button>
               <el-popconfirm title="是否删除该商品?" width="160" confirm-button-text="删除" cancel-button-text="取消" @confirm="handleMultiDelete(scope.row.id)">
                 <template #reference>
                   <el-button size="small" type="danger">删除</el-button>
@@ -174,6 +174,7 @@
     </el-card>
 
     <BannerDrawer ref="bannerDrawerRef" @reloadDataEvt="getTableData(tablePage)" />
+    <DetailDrawer ref="detailDrawerRef" @reloadDataEvt="getTableData(tablePage)" />
   </div>
 </template>
 
@@ -184,6 +185,7 @@ import SearchWrap from '@/components/SearchWrap/SearchWrap.vue';
 import SearchItem from '@/components/SearchItem/SearchItem.vue';
 import ChooseImage from '@/components/ChooseImage/ChooseImage.vue';
 import BannerDrawer from './components/BannerDrawer/BannerDrawer.vue';
+import DetailDrawer from './components/DetailDrawer/DetailDrawer.vue';
 
 import { ref, getCurrentInstance } from 'vue';
 import * as useTableHook from '@/hooks/useTableHook';
@@ -322,6 +324,14 @@ const bannerDrawerRef = ref(null);
  */
 const openUpdateBannerDrawer = tableItem => {
   bannerDrawerRef.value.openBannerDrawer(tableItem);
+};
+
+const detailDrawerRef = ref(null);
+/**
+ * 打开更新商品详情 drawer
+ */
+const openUpdateDetailDrawer = tableItem => {
+  detailDrawerRef.value.openDetailDrawer(tableItem);
 };
 </script>
 

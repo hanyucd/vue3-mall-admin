@@ -106,4 +106,6 @@ export default {
   getGoodsDetailApi: goodsId => httpRequest(`/admin/goods/read/${ goodsId }`),
   // 更新商品轮播图
   updateGoodBannerApi: (goodsId, param) => httpRequest(`/admin/goods/banners/${ goodsId }`, param, 'post'),
+  // 更新商品信息
+  updateGoodsApi: (goodsId, param) => httpRequest(`/admin/goods/${ goodsId }`, param, 'post'),
 };
