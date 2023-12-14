@@ -2,7 +2,7 @@
   <el-drawer v-model="isShowBannerDrawer" title="设置轮播图" size="40%" destroy-on-close :show-close="true">
     <el-form v-loading="isLoading" :model="bannerForm">
       <el-form-item>
-        <ChooseImage v-model="bannerForm.banners" :limit="9" />
+        <ChooseImage v-model="bannerForm.banners" :image-limit="9" />
       </el-form-item>
       <el-form-item>
         <el-button type="primary" :loading="submitBtnLoading" @click="submitBannerUpdate">提交</el-button>
@@ -44,7 +44,6 @@ const openBannerDrawer = tableItem => {
     tableItem.bannersLoading = false;
   });
 };
-
 
 const submitBtnLoading = ref(false);
 /**

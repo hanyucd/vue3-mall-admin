@@ -4,7 +4,7 @@
       <el-image v-if="(typeof modelValue == 'string')" :src="modelValue" fit="cover" :lazy="true" class="border w-[100px] h-[100px] rounded mx-1 mb-2" />
       <template v-else>
         <div v-for="(url, index) in modelValue" :key="index" class="relative flex flex-wrap w-[100px] h-[100px] mx-1 mb-2">
-          <el-icon class="bg-white rounded-full text-md absolute top-[5px] right-[5px] z-10 " @click="removeImage(url)">
+          <el-icon class="bg-white rounded-full text-md absolute top-[5px] right-[5px] z-10 cursor-pointer" @click="removeImage(url)">
             <CircleClose />
           </el-icon>
           <el-image :src="url" fit="cover" :lazy="true" class="border w-[100px] h-[100px] rounded " />
@@ -85,6 +85,9 @@ const onImageChooseEvt = checkedImageList => {
 };
 
 const emit = defineEmits(['update:modelValue']);
+
+const callBackFunction = ref(null);
+
 /**
  * 提交选中的图片
  */
@@ -92,17 +95,17 @@ const emit = defineEmits(['update:modelValue']);
   if (!checkedImageURLs.length) return proxy.$commonUtil.elNotify('没有选中图片', 'warning');
 
   if (props.imageLimit > 1) {
-    // // 编辑商品详情时添加图片
-    // if (!props.showBtn && typeof callBackFunction.value === 'function') {
-    //     callBackFunction.value(urls);
-    // } else {
-    //     let values = [...props.modelValue, ...urls];
-    //     if (values.length > props.imageLimit) {
-    //         values = values.splice(0, props.imageLimit);
-    //         toast(`最多只能传${props.imageLimit}张图片`, 'warning');
-    //     }
-    //     emit('update:modelValue', values);
-    // }
+    // 编辑商品详情时添加图片
+    if (!props.showBtn && typeof callBackFunction.value === 'function') {
+      callBackFunction.value(checkedImageURLs);
+    } else {
+      let newBannerList = [...props.modelValue, ...checkedImageURLs];
+      if (newBannerList.length > props.imageLimit) {
+        newBannerList = newBannerList.splice(0, props.imageLimit);
+        proxy.$commonUtil.elNotify(`最多只能传${ props.imageLimit }张图片`, 'warning');
+      }
+      emit('update:modelValue', newBannerList);
+    }
   } else {
     // 组件 v-model 实现双向绑定
     emit('update:modelValue', checkedImageURLs[0] || '' );
@@ -110,6 +113,11 @@ const emit = defineEmits(['update:modelValue']);
 
   closeChooseImageDialog();
 };
+
+/**
+ * 移除图片
+ */
+const removeImage = url => emit('update:modelValue', props.modelValue.filter(item => item != url));
 
 /**
  * 监听图片 dialog 关闭事件

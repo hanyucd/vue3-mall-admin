@@ -82,8 +82,8 @@
             <div v-if="searchForm.tab != 'delete'">
               <el-button class="px-1" size="small" type="primary" @click="handleEditTableItem(scope.row)">修改</el-button>
               <!-- <el-button class="px-1" size="small" :type="isSetSku(scope.row)" :loading="scope.row.skusLoading" @click="handleSetGoodsSkus(scope.row)">商品规格</el-button> -->
-              <el-button class="px-1" size="small" :type="scope.row.goods_banner.length == 0 ? 'danger' : 'primary'" :loading="scope.row.bannersLoading" @click="openUpdateBannerDrawer(scope.row)">设置轮播图</el-button>
-              <el-button class="px-1" size="small" :type="!scope.row.content ? 'danger' : 'primary'" :loading="scope.row.contentLoading" @click="handleSetGoodsContent(scope.row)">商品详情</el-button>
+              <el-button class="px-1" size="small" :type="scope.row.goods_banner.length ? 'primary' : 'danger'" :loading="scope.row.bannersLoading" @click="openUpdateBannerDrawer(scope.row)">设置轮播图</el-button>
+              <el-button class="px-1" size="small" :type="!(scope.row.content) ? 'danger' : 'primary'" :loading="scope.row.contentLoading" @click="handleSetGoodsContent(scope.row)">商品详情</el-button>
               <el-popconfirm title="是否删除该商品?" width="160" confirm-button-text="删除" cancel-button-text="取消" @confirm="handleMultiDelete(scope.row.id)">
                 <template #reference>
                   <el-button size="small" type="danger">删除</el-button>
@@ -190,8 +190,6 @@ import * as useTableHook from '@/hooks/useTableHook';
 
 const { proxy } = getCurrentInstance();
 
-const managerRoles = ref([]); // 管理员角色列表
-
 const {
   tableIsLoading,
   tablePage,
@@ -220,9 +218,12 @@ const {
   batchDeleteApi: proxy.$api.batchDeleteGoodsApi,
   // 回调函数
   onGetListSuccess: tableDataRes => {
-    // 管理员角色赋值
-    managerRoles.value = tableDataRes.roles || [];
-    tableDataList.value = tableDataRes.list.map(item => { item.isLoading = false; return item; });
+    tableDataList.value = tableDataRes.list.map(item => {
+      item.bannersLoading = false;
+      item.contentLoading = false;
+      item.skusLoading = false;
+      return item;
+    });
     tableTotal.value = tableDataRes.totalCount;
   },
 });
@@ -293,9 +294,7 @@ const _handleMultiAction = (api, params, isClear = false) => {
     tableIsLoading.value = true;
     api(params).then(res => {
       if (isClear) {
-        if (tableRef.value) {
-          tableRef.value.clearSelection();
-        }
+        tableRef.value && tableRef.value.clearSelection();
         selectTabItemIds.value = [];
       }
       resolve(res);
