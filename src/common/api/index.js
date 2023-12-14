@@ -100,6 +100,10 @@ export default {
   batchDeleteGoodsApi: param => httpRequest(`/admin/goods/delete_all`, param, 'post'),
   // 批量更新商品 上下架状态
   batchUpdateGoodsStatusApi: param => httpRequest(`/admin/goods/changestatus`, param, 'post'),
+  // 批量恢复商品
+  batchRestoreGoodsApi: param => httpRequest(`/admin/goods/restore`, param, 'post'),
+  // 批量彻底删除商品
+  batchDestroyGoodsApi: param => httpRequest(`/admin/goods/destroy`, param, 'post'),
   // 获取商品分类列表
   getGoodsCategoryLisApi: () => httpRequest(`/admin/category`),
   // 获取商品详情信息

@@ -22,9 +22,9 @@
       
       <!-- 头部 -->
       <TableHeader btn-list="create, refresh, delete" title="商品" @createEvt="openFormDrawer" @refreshEvt="getTableData(tablePage)" @deleteEvt="handleBatchTableItemDelete">
-        <el-button v-if="searchForm.tab == 'delete'" type="warning" @click="handleMultiRestore">恢复商品</el-button>
+        <el-button v-if="searchForm.tab == 'delete'" type="warning" @click="handleGoodsRestore">恢复商品</el-button>
 
-        <el-popconfirm v-if="searchForm.tab == 'delete'" title="是否彻底删除该商品?" width="170" confirm-button-text="删除" cancel-button-text="取消" @confirm="handleMultiDestroy">
+        <el-popconfirm v-if="searchForm.tab == 'delete'" title="是否彻底删除该商品?" width="170" confirm-button-text="删除" cancel-button-text="取消" @confirm="handleGoodsDestroy">
           <template #reference>
             <el-button type="danger">彻底删除</el-button>
           </template>
@@ -84,7 +84,7 @@
               <el-button class="px-1" size="small" :type="isSetSku(scope.row)" :loading="scope.row.skusLoading" @click="openUpdateSkuDrawer(scope.row)">商品规格</el-button>
               <el-button class="px-1" size="small" :type="scope.row.goods_banner.length ? 'primary' : 'danger'" :loading="scope.row.bannersLoading" @click="openUpdateBannerDrawer(scope.row)">设置轮播图</el-button>
               <el-button class="px-1" size="small" :type="!(scope.row.content) ? 'danger' : 'primary'" :loading="scope.row.contentLoading" @click="openUpdateDetailDrawer(scope.row)">商品详情</el-button>
-              <el-popconfirm title="是否删除该商品?" width="160" confirm-button-text="删除" cancel-button-text="取消" @confirm="handleMultiDelete(scope.row.id)">
+              <el-popconfirm title="是否删除该商品?" width="160" confirm-button-text="删除" cancel-button-text="取消" @confirm="handleBatchTableItemDelete(scope.row)">
                 <template #reference>
                   <el-button size="small" type="danger">删除</el-button>
                 </template>
@@ -173,8 +173,11 @@
       </FormDrawer>
     </el-card>
 
+    <!-- 商品轮播图 弹窗 -->
     <BannerDrawer ref="bannerDrawerRef" @reloadDataEvt="getTableData(tablePage)" />
+    <!-- 商品详情 弹窗 -->
     <DetailDrawer ref="detailDrawerRef" @reloadDataEvt="getTableData(tablePage)" />
+    <!-- 商品规格 弹窗 -->
     <SkuDrawer ref="skuDrawerRef" @reloadDataEvt="getTableData(tablePage)" />
   </div>
 </template>
@@ -204,7 +207,6 @@ const {
   selectTabItemIds,
   searchForm,
   resetSearchForm,
-  switchChange,
   getTableData,
   onTableCurPaginationChangeEvt,
   handleTableSelectionChangeEvt,
@@ -310,13 +312,35 @@ const _handleMultiAction = (api, params, isClear = false) => {
 };
 
 /**
- * 处理商品上下架
+ * 批量处理商品上下架
  */
 const handleGoodsPutaway = status => {
   if (!selectTabItemIds.value.length) return proxy.$commonUtil.elNotify(`请先选择商品项`, 'warning');
 
   _handleMultiAction(proxy.$api.batchUpdateGoodsStatusApi, { ids: selectTabItemIds.value, status }, true).then(res => {
     proxy.$commonUtil.elNotify(status ? `上架成功` : '下架成功');
+  });
+};
+
+/**
+ * 批量处理商品恢复
+ */
+const handleGoodsRestore = () => {
+  if (!selectTabItemIds.value.length) return proxy.$commonUtil.elNotify(`请先选择商品项`, 'warning');
+
+  _handleMultiAction(proxy.$api.batchRestoreGoodsApi, { ids: selectTabItemIds.value }, true).then(res => {
+    proxy.$commonUtil.elNotify('商品恢复成功');
+  });
+};
+
+/**
+ * 批量处理商品彻底删除
+ */
+const handleGoodsDestroy = () => {
+  if (!selectTabItemIds.value.length) return proxy.$commonUtil.elNotify(`请先选择商品项`, 'warning');
+
+  _handleMultiAction(proxy.$api.batchDestroyGoodsApi, { ids: selectTabItemIds.value }, true).then(res => {
+    proxy.$commonUtil.elNotify('商品恢复成功');
   });
 };
 

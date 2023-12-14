@@ -7,7 +7,8 @@
           <el-radio :label="1" border>多规格</el-radio>
         </el-radio-group>
       </el-form-item>
-
+      
+      <!-- 单规格 -->
       <template v-if="skuForm.sku_type == 0">
         <el-form-item label="市场价格">
           <el-input v-model="skuForm.sku_value.oprice" style="max-width: 300px;">
@@ -36,9 +37,9 @@
         </el-form-item>
       </template>
 
+      <!-- 多规格 -->
       <template v-else>
-        多规格
-      <!-- <sku-card /> -->
+        <SkuCard />
       </template>
     </el-form>
   </FormDrawer>
@@ -46,6 +47,7 @@
 
 <script setup>
 import FormDrawer from '@/components/FormDrawer/FormDrawer.vue';
+import SkuCard from './components/SkuCard/SkuCard.vue';
 import { ref, reactive, getCurrentInstance } from 'vue';
 
 const { proxy } = getCurrentInstance();
@@ -53,7 +55,7 @@ const { proxy } = getCurrentInstance();
 const goodsId = ref(0); // 商品 id
 // 商品规格表单
 const skuForm = reactive({
-  sku_type: 0,
+  sku_type: 1,
   sku_value: {
     oprice: 0,
     pprice: 0,
