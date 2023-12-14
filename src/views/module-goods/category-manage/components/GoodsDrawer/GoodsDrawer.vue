@@ -1,5 +1,5 @@
 <template>
-  <FormDrawer ref="formDrawerRef" title="推荐商品" size="50%" destroy-on-close @formDrawerSubmitEvt="onFormDrawerSubmitEvt">
+  <FormDrawer ref="formDrawerRef" title="推荐商品" confirm-text="关联" size="50%" destroy-on-close @formDrawerSubmitEvt="openChooseGoodsRelationDialog">
     <el-table :data="tableData" border stripe>
       <el-table-column prop="goods_id" label="ID" width="60" align="center" />
 
@@ -21,12 +21,15 @@
         </template>
       </el-table-column>
     </el-table>
+
+    <ChooseGoodsDialog ref="chooseGoodsDialogRef" />
   </FormDrawer>
 </template>
 
 <script setup>
 import FormDrawer from '@/components/FormDrawer/FormDrawer.vue';
-import { ref, reactive, getCurrentInstance } from 'vue';
+import ChooseGoodsDialog from '@/components/ChooseGoodsDialog/ChooseGoodsDialog.vue';
+import { ref, getCurrentInstance } from 'vue';
 
 const { proxy } = getCurrentInstance();
 const tableData = ref([]);
@@ -69,6 +72,22 @@ const handleDeleteRelation = tableItem => {
   proxy.$api.deleteGoodsCategoryRelationApi(tableItem.id).then(res => {
     proxy.$commonUtil.elNotify('删除成功');
     _getGoodsCategoryRelationList();
+  });
+};
+
+const chooseGoodsDialogRef = ref(null);
+// 打开关联 dialog
+const openChooseGoodsRelationDialog = () => {
+  chooseGoodsDialogRef.value.openChooseGoodsDialog(goodsId => {
+    formDrawerRef.value.showSubmitBtnLoading();
+
+    const param = { category_id: categoryId.value, goods_ids: goodsId };
+    proxy.$api.updateGoodsCategoryRelationApi(param).then(res => {
+      _getGoodsCategoryRelationList();
+      proxy.$commonUtil.elNotify('关联成功');
+    }).finally(() => {
+      formDrawerRef.value.hideSubmitBtnLoading();
+    });
   });
 };
 
