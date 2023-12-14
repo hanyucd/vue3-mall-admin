@@ -114,4 +114,15 @@ export default {
   updateGoodsApi: (goodsId, param) => httpRequest(`/admin/goods/${ goodsId }`, param, 'post'),
   // 更新商品规格信息
   updateGoodsSkuApi: (goodsId, param) => httpRequest(`/admin/goods/updateskus/${ goodsId }`, param, 'post'),
+
+  // 获取商品分类列表
+  getGoodsCategoryListApi: () => httpRequest(`/admin/category`),
+  // 创建商品分类
+  createGoodsCategoryApi: param => httpRequest(`/admin/category`, param, 'post'),
+  // 更新商品分类
+  updateGoodsCategoryApi: (categoryId, param) => httpRequest(`/admin/category/${ categoryId }`, param, 'post'),
+  // 删除商品分类
+  deleteGoodsCategoryApi: categoryId => httpRequest(`/admin/category/${ categoryId }/delete`, {}, 'post'),
+  // 更新商品分类 状态
+  updateGoodsCategoryStatusApi: (categoryId, param) => httpRequest(`/admin/category/${ categoryId }/update_status`, param, 'post'),
 };
