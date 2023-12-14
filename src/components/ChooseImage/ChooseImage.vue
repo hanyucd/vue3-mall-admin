@@ -78,7 +78,6 @@ let checkedImageURLs = [];
  * 监听图片选中 事件
  */
 const onImageChooseEvt = checkedImageList => {
-  console.log('选中：', checkedImageList);
   // 过滤出图片地址
   checkedImageURLs = checkedImageList.map(item => item.url);
   console.log('选中URL：', checkedImageURLs);
@@ -97,6 +96,8 @@ const callBackFunction = ref(null);
   if (props.imageLimit > 1) {
     // 编辑商品详情时添加图片
     if (!props.showBtn && typeof callBackFunction.value === 'function') {
+      console.log('回调函数', checkedImageURLs);
+      // 回调传回指
       callBackFunction.value(checkedImageURLs);
     } else {
       let newBannerList = [...props.modelValue, ...checkedImageURLs];
@@ -129,7 +130,8 @@ const onImageDialogCloseEvt = () => {
 /**
  * 打开选择图片 dialog
  */
-const openImageDialog = () => {
+const openImageDialog = (callBack = null) => {
+  callBackFunction.value = callBack; // 设置回调函数
   dialogVisible.value = true;
 };
 

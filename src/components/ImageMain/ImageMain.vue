@@ -113,8 +113,6 @@ const emit = defineEmits(['imageChooseEvt']);
  * 切换图片复选框选中状态
  */
 const handleCheckedChange = imageItem => {
-  console.log(imageItem);
-
   if (imageItem.checked && checkedImageList.value.length > props.imageLimit) {
     imageItem.checked = false;
     commonUtil.elNotify(`只能选择${ props.imageLimit }张图片`, 'error');
