@@ -91,7 +91,6 @@ export default {
   deleteCouponApi: couponId => httpRequest(`/admin/coupon/${ couponId }/delete`, {}, 'post'),
   // 更新优惠券 状态
   updateCouponStatusApi: (couponId, param) => httpRequest(`/admin/coupon/${ couponId }/update_status`, param, 'post'),
-
   // 获取商品列表
   getGoodsLisApi: (page, param) => httpRequest(`/admin/goods/${ page }`, param),
   // 创建商品
@@ -131,4 +130,14 @@ export default {
   deleteGoodsCategoryRelationApi: categoryId => httpRequest(`/admin/app_category_item/${ categoryId }/delete`, {}, 'post'),
   // 更新商品、分类关联关系
   updateGoodsCategoryRelationApi: param => httpRequest(`/admin/app_category_item`, param, 'post'),
+  // 获取会员等级列表
+  getUserLevelLisApi: page => httpRequest(`/admin/user_level/${ page }`),
+  // 创建会员等级
+  createUserLevelApi: param => httpRequest(`/admin/user_level`, param, 'post'),
+  // 更新会员等级
+  updateUserLevelApi: (roleId, param) => httpRequest(`/admin/user_level/${ roleId }`, param, 'post'),
+  // 删除会员等级
+  deleteUserLevelApi: roleId => httpRequest(`/admin/user_level/${ roleId }/delete`, {}, 'post'),
+  // 更新会员等级 状态
+  updateUserLevelStatusApi: (roleId, param) => httpRequest(`/admin/user_level/${ roleId }/update_status`, param, 'post'),
 };
