@@ -14,7 +14,7 @@
 
       <el-table-column label="操作" width="300" align="center">
         <template #default="scope">
-          <el-button size="small" type="primary" :loading="scope.row.goodsDrawerLoading" @click="handleEditTableItem(scope.row)">推荐商品</el-button>
+          <el-button size="small" type="primary" :loading="scope.row.goodsDrawerLoading" @click="openRecommendDrawer(scope.row)">推荐商品</el-button>
           <el-button size="small" type="primary" @click="handleEditTableItem(scope.row)">修改</el-button>
           <el-popconfirm title="是否删除该分类?" width="160" confirm-button-text="删除" cancel-button-text="取消" @confirm="handleTableItemDelete(scope.row)">
             <template #reference>
@@ -44,12 +44,15 @@
         </el-form-item>
       </el-form>
     </FormDrawer>
+
+    <GoodsDrawer ref="goodsDrawerRef" />
   </el-card>
 </template>
 
 <script setup>
 import TableHeader from '@/components/TableHeader/TableHeader.vue';
 import FormDrawer from '@/components/FormDrawer/FormDrawer.vue';
+import GoodsDrawer from './components/GoodsDrawer/GoodsDrawer.vue';
 
 import { ref, getCurrentInstance } from 'vue';
 import * as useTableHook from '@/hooks/useTableHook';
@@ -104,6 +107,12 @@ const {
 });
 
 getTableData();
+
+const goodsDrawerRef = ref(null);
+/**
+ * 打开推荐商品 drawer
+ */
+const openRecommendDrawer = tableItem => goodsDrawerRef.value.openRelationDrawer(tableItem);
 </script>
 
 <style lang="scss" scoped>

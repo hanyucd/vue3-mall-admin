@@ -125,4 +125,8 @@ export default {
   deleteGoodsCategoryApi: categoryId => httpRequest(`/admin/category/${ categoryId }/delete`, {}, 'post'),
   // 更新商品分类 状态
   updateGoodsCategoryStatusApi: (categoryId, param) => httpRequest(`/admin/category/${ categoryId }/update_status`, param, 'post'),
+  // 获取商品、分类关联列表
+  getGoodsCategoryRelationListApi: param => httpRequest(`/admin/app_category_item/list`, param),
+  // 删除商品、分类关联关系
+  deleteGoodsCategoryRelationApi: categoryId => httpRequest(`/admin/app_category_item/${ categoryId }/delete`, {}, 'post'),
 };

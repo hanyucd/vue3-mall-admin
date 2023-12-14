@@ -366,7 +366,6 @@ const isSetSku = (item) => {
       || (item.sku_type == 1 && item.goods_skus && item.goods_skus.length > 0) ? 'primary' : 'danger';
 };
 
-
 const skuDrawerRef = ref(null);
 /**
  * 打开更新商品规格 drawer
