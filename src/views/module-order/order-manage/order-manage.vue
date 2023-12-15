@@ -86,8 +86,8 @@
 
         <el-table-column label="操作" align="center">
           <template #default="{ row }">
-            <el-button size="small" type="primary" @click="openInfoDrawer(row)"> 订单详情 </el-button>
-            <el-button v-if="searchForm.tab === 'noship'" size="small" type="primary"> 订单发货 </el-button>
+            <el-button size="small" type="primary" @click="openOrderDetailDrawer(row)">订单详情</el-button>
+            <el-button v-if="searchForm.tab === 'noship'" size="small" type="primary">订单发货</el-button>
             <el-button v-if="searchForm.tab === 'refunding'" size="small" type="success" @click="handleRefund(row.id, 1)">同意退款</el-button>
             <el-button v-if="searchForm.tab === 'refunding'" size="small" type="danger" @click="handleRefund(row.id, 0)">拒绝退款</el-button>
           </template>
@@ -109,7 +109,7 @@
     <!-- 导出 弹窗 -->
     <ExportDrawer ref="exportDrawerRef" :tabs="tabbars" />
     <!-- 详情 弹窗 -->
-    <DetailDrawer ref="detailDrawerRef" @reloadDataEvt="getTableData(tablePage)" />
+    <DetailDrawer ref="detailDrawerRef" :order-detail="orderDetail" @reloadDataEvt="getTableData(tablePage)" />
   </div>
 </template>
 
@@ -176,72 +176,6 @@ const onTabChangeEvt = activeTabName => {
   getTableData();
 };
 
-// 商品分类列表
-const categoryList = ref([]);
-proxy.$api.getGoodsCategoryLisApi().then(res => {
-  categoryList.value = res.data;
-});
-
-// 处理多选行为 | 复用函数
-const _handleMultiAction = (api, params, isClear = false) => {
-  return new Promise((resolve, reject) => {
-    tableIsLoading.value = true;
-    api(params).then(res => {
-      if (isClear) {
-        tableRef.value && tableRef.value.clearSelection();
-        selectTabItemIds.value = [];
-      }
-      resolve(res);
-      getTableData(tablePage.value);
-    }).finally(() => {
-      tableIsLoading.value = false;
-    });
-  });
-};
-
-/**
- * 批量处理商品上下架
- */
-const handleGoodsPutaway = status => {
-  if (!selectTabItemIds.value.length) return proxy.$commonUtil.elNotify(`请先选择商品项`, 'warning');
-
-  _handleMultiAction(proxy.$api.batchUpdateGoodsStatusApi, { ids: selectTabItemIds.value, status }, true).then(res => {
-    proxy.$commonUtil.elNotify(status ? `上架成功` : '下架成功');
-  });
-};
-
-/**
- * 批量处理商品恢复
- */
-const handleGoodsRestore = () => {
-  if (!selectTabItemIds.value.length) return proxy.$commonUtil.elNotify(`请先选择商品项`, 'warning');
-
-  _handleMultiAction(proxy.$api.batchRestoreGoodsApi, { ids: selectTabItemIds.value }, true).then(res => {
-    proxy.$commonUtil.elNotify('商品恢复成功');
-  });
-};
-
-/**
- * 批量处理商品彻底删除
- */
-const handleGoodsDestroy = () => {
-  if (!selectTabItemIds.value.length) return proxy.$commonUtil.elNotify(`请先选择商品项`, 'warning');
-
-  _handleMultiAction(proxy.$api.batchDestroyGoodsApi, { ids: selectTabItemIds.value }, true).then(res => {
-    proxy.$commonUtil.elNotify('商品恢复成功');
-  });
-};
-
-/**
- * 审核商品
- */
-const handleGoodsCheck = (tableItem, isCheck) => {
-  proxy.$api.checkGoodsApi(tableItem.id, { ischeck: isCheck }).then(res => {
-    getTableData(tablePage.value);
-    proxy.$commonUtil.elNotify(isCheck === 1 ? '审核通过' : '审核拒绝');
-  });
-};
-
 const exportDrawerRef = ref(null);
 /**
  * 打开导出 drawer
@@ -251,13 +185,14 @@ const openDownExportDrawer = () => {
 };
 
 const detailDrawerRef = ref(null);
+const orderDetail = ref(null);
 /**
- * 打开更新商品详情 drawer
+ * 打开订单详情 drawer
  */
-const openUpdateDetailDrawer = tableItem => {
-  detailDrawerRef.value.openDetailDrawer(tableItem);
+const openOrderDetailDrawer = tableItem => {
+  orderDetail.value = tableItem;
+  detailDrawerRef.value.openDetailDrawer();
 };
-
 
 const skuDrawerRef = ref(null);
 /**
