@@ -7,7 +7,7 @@
       </SearchItem>
     </SearchWrap>
     
-    <TableHeader @createEvt="openFormDrawer" @refreshEvt="getTableData(tablePage)" />
+    <TableHeader btn-list="refresh" @refreshEvt="getTableData(tablePage)" />
     
     <!-- 表格数据 -->
     <el-table v-loading="tableIsLoading" default-expand-all :data="tableDataList" border stripe>

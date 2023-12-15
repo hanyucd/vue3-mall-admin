@@ -1,12 +1,271 @@
 <template>
   <div>
-    模板
+    <el-tabs v-model="searchForm.tab" class="demo-tabs" @tab-change="onTabChangeEvt">
+      <el-tab-pane v-for="(item, index) in tabbars" :key="index" :label="item.name" :name="item.key" />
+    </el-tabs>
+    
+    <el-card shadow="never" class="border-0">
+      <!-- 搜索 -->
+      <SearchWrap :form-model="searchForm" @searchEvt="getTableData" @resetEvt="resetSearchForm">
+        <SearchItem label="关键词">
+          <el-input v-model="searchForm.title" clearable placeholder="请输入商品名称" />
+        </SearchItem>
+        <!-- 具名插槽 -->
+        <template #more>
+          <SearchItem label="收货人">
+            <el-input v-model="searchForm.name" clearable placeholder="收货人" />
+          </SearchItem>
+
+          <SearchItem label="手机号">
+            <el-input v-model="searchForm.phone" clearable placeholder="手机号" />
+          </SearchItem>
+
+          <SearchItem label="开始日期">
+            <el-date-picker v-model="searchForm.starttime" type="date" value-format="YYYY-MM-DD" placeholder="开始日期" />
+          </SearchItem>
+          <SearchItem label="结束日期">
+            <el-date-picker v-model="searchForm.endtime" type="date" value-format="YYYY-MM-DD" placeholder="结束日期" />
+          </SearchItem>
+        </template>
+      </SearchWrap>
+      
+      <!-- 头部 -->
+      <TableHeader btn-list="refresh, delete, download" title="订单" @downloadEvt="openDownExportDrawer" @refreshEvt="getTableData(tablePage)" @deleteEvt="handleBatchTableItemDelete" />
+      
+      <!-- 表格数据 -->
+      <el-table v-loading="tableIsLoading" :data="tableDataList" border stripe @selection-change="handleTableSelectionChangeEvt">
+        <el-table-column type="selection" width="55" />
+
+        <el-table-column label="商品">
+          <template #default="{ row }">
+            <div class="flex text-sm">
+              <div class="flex-1">
+                <p>订单号:</p>
+                <small>{{ row.no }}</small>
+              </div>
+              <div>
+                <p>下单时间:</p>
+                <small>{{ row.create_time }}</small>
+              </div>
+            </div>
+            <div v-for="(item, index) in row.order_items" :key="index" class="flex items-center">
+              <el-image :src="item.goods_item ? item.goods_item.cover : ''" fit="cover" :lazy="true" style="width: 50px;height: 50px;" />
+              <p class=" text-blue-400 pl-2">
+                {{ item.goods_item ? item.goods_item.title : '商品已被删除' }}
+              </p>
+            </div>
+          </template>
+        </el-table-column>
+
+        <el-table-column prop="total_price" label="实际付款" align="center" />
+
+        <el-table-column label="买家信息" align="center">
+          <template #default="{ row }">
+            <div class="text-gray-500">
+              {{ row.user.nickname || row.user.username }}
+              <p class=" text-xs">用户ID: {{ row.user.id }}</p>
+            </div>
+          </template>
+        </el-table-column>
+        
+        <el-table-column label="交易状态" align="center">
+          <template #default="{ row }">
+            <div>
+              <el-tag v-if="row.payment_method == 'wechat'" type="success" size="small">微信支付</el-tag>
+              <el-tag v-else-if="row.payment_method == 'alipay'" size="small">支付宝支付</el-tag>
+              <el-tag v-else type="info" size="small">未支付</el-tag>
+            </div>
+            <div>
+              <el-tag :type="row.ship_data ? 'success' : 'info'" size="small">{{ row.ship_data ? '已发货' : '未发货' }}</el-tag>
+            </div>
+            <div>
+              <el-tag :type="row.ship_status == 'received' ? 'success' : 'info'" size="small">{{ row.ship_status == 'received' ? '已收货' : '未收货' }}</el-tag>
+            </div>
+          </template>
+        </el-table-column>
+
+        <el-table-column label="操作" align="center">
+          <template #default="{ row }">
+            <el-button size="small" type="primary" @click="openInfoDrawer(row)"> 订单详情 </el-button>
+            <el-button v-if="searchForm.tab === 'noship'" size="small" type="primary"> 订单发货 </el-button>
+            <el-button v-if="searchForm.tab === 'refunding'" size="small" type="success" @click="handleRefund(row.id, 1)">同意退款</el-button>
+            <el-button v-if="searchForm.tab === 'refunding'" size="small" type="danger" @click="handleRefund(row.id, 0)">拒绝退款</el-button>
+          </template>
+        </el-table-column>
+      </el-table>
+  
+      <!-- 分页器 -->
+      <el-pagination
+        v-model:current-page="tablePage"
+        v-model:page-size="tableLimit"
+        class="mt-6 flex items-center justify-center"
+        background
+        layout="prev, pager, next" 
+        :total="tableTotal"
+        @current-change="onTableCurPaginationChangeEvt"
+      />
+    </el-card>
+
+    <!-- 导出 弹窗 -->
+    <ExportDrawer ref="exportDrawerRef" :tabs="tabbars" />
+    <!-- 详情 弹窗 -->
+    <DetailDrawer ref="detailDrawerRef" @reloadDataEvt="getTableData(tablePage)" />
   </div>
 </template>
 
 <script setup>
-import { reactive, watch } from 'vue';
+import TableHeader from '@/components/TableHeader/TableHeader.vue';
+import SearchWrap from '@/components/SearchWrap/SearchWrap.vue';
+import SearchItem from '@/components/SearchItem/SearchItem.vue';
+import ExportDrawer from './components/ExportDrawer/ExportDrawer.vue';
+import DetailDrawer from './components/DetailDrawer/DetailDrawer.vue';
 
+import { ref, getCurrentInstance } from 'vue';
+import * as useTableHook from '@/hooks/useTableHook';
+
+const { proxy } = getCurrentInstance();
+
+const {
+  tableIsLoading,
+  tablePage,
+  tableLimit,
+  tableTotal,
+  tableDataList,
+  tableRef,
+  selectTabItemIds,
+  searchForm,
+  resetSearchForm,
+  getTableData,
+  onTableCurPaginationChangeEvt,
+  handleTableSelectionChangeEvt,
+  handleTableItemDelete,
+  handleBatchTableItemDelete,
+} = useTableHook.useBaseTableHook({
+  searchForm: {
+    tab: 'all',
+    no: null,
+    starttime: null,
+    endtime: null,
+    name: null,
+    phone: null
+  },
+  getTableDataApi: proxy.$api.getOrderLisApi,
+  batchDeleteApi: proxy.$api.batchDeleteOrderApi,
+});
+
+
+// tab 标签页
+const tabbars = [
+  { key: 'all', name: '全部' },
+  { key: 'nopay', name: '待支付' },
+  { key: 'noship', name: '待发货' },
+  { key: 'shiped', name: '待收货' },
+  { key: 'received', name: '已收货' },
+  { key: 'finish', name: '已完成' },
+  { key: 'closed', name: '已关闭' },
+  { key: 'refunding', name: '退款中' }
+];
+
+getTableData();
+
+/**
+ * tab 改变时触发
+ */
+const onTabChangeEvt = activeTabName => {
+  console.log(activeTabName);
+  getTableData();
+};
+
+// 商品分类列表
+const categoryList = ref([]);
+proxy.$api.getGoodsCategoryLisApi().then(res => {
+  categoryList.value = res.data;
+});
+
+// 处理多选行为 | 复用函数
+const _handleMultiAction = (api, params, isClear = false) => {
+  return new Promise((resolve, reject) => {
+    tableIsLoading.value = true;
+    api(params).then(res => {
+      if (isClear) {
+        tableRef.value && tableRef.value.clearSelection();
+        selectTabItemIds.value = [];
+      }
+      resolve(res);
+      getTableData(tablePage.value);
+    }).finally(() => {
+      tableIsLoading.value = false;
+    });
+  });
+};
+
+/**
+ * 批量处理商品上下架
+ */
+const handleGoodsPutaway = status => {
+  if (!selectTabItemIds.value.length) return proxy.$commonUtil.elNotify(`请先选择商品项`, 'warning');
+
+  _handleMultiAction(proxy.$api.batchUpdateGoodsStatusApi, { ids: selectTabItemIds.value, status }, true).then(res => {
+    proxy.$commonUtil.elNotify(status ? `上架成功` : '下架成功');
+  });
+};
+
+/**
+ * 批量处理商品恢复
+ */
+const handleGoodsRestore = () => {
+  if (!selectTabItemIds.value.length) return proxy.$commonUtil.elNotify(`请先选择商品项`, 'warning');
+
+  _handleMultiAction(proxy.$api.batchRestoreGoodsApi, { ids: selectTabItemIds.value }, true).then(res => {
+    proxy.$commonUtil.elNotify('商品恢复成功');
+  });
+};
+
+/**
+ * 批量处理商品彻底删除
+ */
+const handleGoodsDestroy = () => {
+  if (!selectTabItemIds.value.length) return proxy.$commonUtil.elNotify(`请先选择商品项`, 'warning');
+
+  _handleMultiAction(proxy.$api.batchDestroyGoodsApi, { ids: selectTabItemIds.value }, true).then(res => {
+    proxy.$commonUtil.elNotify('商品恢复成功');
+  });
+};
+
+/**
+ * 审核商品
+ */
+const handleGoodsCheck = (tableItem, isCheck) => {
+  proxy.$api.checkGoodsApi(tableItem.id, { ischeck: isCheck }).then(res => {
+    getTableData(tablePage.value);
+    proxy.$commonUtil.elNotify(isCheck === 1 ? '审核通过' : '审核拒绝');
+  });
+};
+
+const exportDrawerRef = ref(null);
+/**
+ * 打开导出 drawer
+ */
+const openDownExportDrawer = () => {
+  exportDrawerRef.value.openExportDrawer();
+};
+
+const detailDrawerRef = ref(null);
+/**
+ * 打开更新商品详情 drawer
+ */
+const openUpdateDetailDrawer = tableItem => {
+  detailDrawerRef.value.openDetailDrawer(tableItem);
+};
+
+
+const skuDrawerRef = ref(null);
+/**
+ * 打开更新商品规格 drawer
+ */
+const openUpdateSkuDrawer = tableItem => {
+  skuDrawerRef.value.openSkuDrawer(tableItem);
+};
 </script>
 
 <style lang="scss" scoped>

@@ -158,4 +158,9 @@ export default {
   updateGoodsCommentStatusApi: (commentId, param) => httpRequest(`/admin/goods_comment/${ commentId }/update_status`, param, 'post'),
   // 回复商品评论
   replyGoodsCommentApi: (commentId, param) => httpRequest(`/admin/goods_comment/review/${ commentId }`, param, 'post'),
+
+  // 获取订单列表
+  getOrderLisApi: (page, param) => httpRequest(`/admin/order/${ page }`, param),
+  // 导出商品订单
+  exportOrderApi: param => httpRequest(`/admin/order/excelexport`, param, 'post', { responseType: 'blob' }),
 };

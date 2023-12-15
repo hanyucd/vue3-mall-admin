@@ -31,7 +31,7 @@ http.interceptors.request.use(config => {
  */
 http.interceptors.response.use(response => {
   // 2xx 范围内的状态码都会触发该函数
-  // console.log(response);
+  console.log(response);
   const resData = response.data;
 
   return resData;
@@ -51,11 +51,12 @@ http.interceptors.response.use(response => {
 });
 
 
-const httpRequest = (url = '', data = {}, method = 'get') => {
+const httpRequest = (url = '', data = {}, method = 'get', otherConfig = {}) => {
   return http.request({
     url,
     method: method.toLowerCase(),
-    [method === 'get' ? 'params' : 'data']: data
+    [method === 'get' ? 'params' : 'data']: data,
+    ...otherConfig
   });
 };
 
