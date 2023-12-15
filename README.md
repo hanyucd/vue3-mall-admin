@@ -1,7 +1,17 @@
-# Vue 3 + Vite
+# vue3-mall-admin
+> 一个基于 Vue3 + Element-Plus + Vite 搭建的PC端商城管理后台
 
-This template should help get you started developing with Vue 3 in Vite. The template uses Vue 3 `<script setup>` SFCs, check out the [script setup docs](https://v3.vuejs.org/api/sfc-script-setup.html#sfc-script-setup) to learn more.
+## 技术栈 
 
-## Recommended IDE Setup
+前端：脚手架工具 vite@5.0
 
-- [VS Code](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur) + [TypeScript Vue Plugin (Volar)](https://marketplace.visualstudio.com/items?itemName=Vue.vscode-typescript-vue-plugin).
+主体：**vue3 + vue-router4 + vuex4 + element-plus**
+
+
+### 成果展示
+
+![这是图片](./display/login.png)
+<p align="center">
+  <!-- <img src="https://github.com/hanyucd/vue-mall-mobile/blob/master/screenshots/home.png" width="320" height="600" />
+  <img src="https://github.com/hanyucd/vue-mall-mobile/blob/master/screenshots/category.png" width="320" height="600" /> -->
+</p>
