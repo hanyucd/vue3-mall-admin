@@ -113,6 +113,8 @@ export default {
   updateGoodsApi: (goodsId, param) => httpRequest(`/admin/goods/${ goodsId }`, param, 'post'),
   // 更新商品规格信息
   updateGoodsSkuApi: (goodsId, param) => httpRequest(`/admin/goods/updateskus/${ goodsId }`, param, 'post'),
+  // 审核商品
+  checkGoodsApi: (goodsId, param) => httpRequest(`/admin/goods/${ goodsId }/check`, param, 'post'),
 
   // 获取商品分类列表
   getGoodsCategoryListApi: () => httpRequest(`/admin/category`),

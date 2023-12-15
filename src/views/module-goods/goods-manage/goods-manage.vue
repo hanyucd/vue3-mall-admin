@@ -67,8 +67,8 @@
         <el-table-column v-if="searchForm.tab != 'delete'" label="审核状态" width="100" align="center">
           <template #default="{ row }">
             <div v-if="row.ischeck == 0">
-              <el-button type="success" size="small" plain @click="CheckGoodsStatus(row, 1)">审核通过</el-button>
-              <el-button class="mt-1" type="danger" size="small" plain style="margin-left: 0 !important;" @click="CheckGoodsStatus(row, 2)">审核拒绝</el-button>
+              <el-button type="success" size="small" plain @click="handleGoodsCheck(row, 1)">审核通过</el-button>
+              <el-button class="mt-1" type="danger" size="small" plain style="margin-left: 0 !important;" @click="handleGoodsCheck(row, 2)">审核拒绝</el-button>
             </div>
             <el-tag v-else-if="row.ischeck == 1" type="success" size="small" effect="plain">通过</el-tag>
             <el-tag v-else type="danger" size="small" effect="plain">拒绝</el-tag>
@@ -341,6 +341,16 @@ const handleGoodsDestroy = () => {
 
   _handleMultiAction(proxy.$api.batchDestroyGoodsApi, { ids: selectTabItemIds.value }, true).then(res => {
     proxy.$commonUtil.elNotify('商品恢复成功');
+  });
+};
+
+/**
+ * 审核商品
+ */
+const handleGoodsCheck = (tableItem, isCheck) => {
+  proxy.$api.checkGoodsApi(tableItem.id, { ischeck: isCheck }).then(res => {
+    getTableData(tablePage.value);
+    proxy.$commonUtil.elNotify(isCheck === 1 ? '审核通过' : '审核拒绝');
   });
 };
 
