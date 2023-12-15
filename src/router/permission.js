@@ -16,7 +16,7 @@ const whiteRouteList = ['loginRoute'];
  * 全局路由前置守卫
  */
 router.beforeEach((to, from, next) => {
-  console.log('路由To：', to);
+  // console.log('路由To：', to);
   if (to.meta.title) document.title = `${ to.meta.title }-Vue3商城后台`;
 
   NProgress.start();
