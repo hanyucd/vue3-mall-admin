@@ -10,22 +10,15 @@
             <el-radio-button label="last7days">最近7天</el-radio-button>
           </el-radio-group>
         </el-form-item>
+
         <el-form-item label="开始日期">
-          <el-date-picker
-            v-model="searchForm.starttime"
-            type="date"
-            value-format="YYYY-MM-DD"
-            placeholder="开始日期"
-          />
+          <el-date-picker v-model="searchForm.starttime" type="date" value-format="YYYY-MM-DD" placeholder="开始日期" />
         </el-form-item>
+
         <el-form-item label="结束日期">
-          <el-date-picker
-            v-model="searchForm.endtime"
-            type="date"
-            value-format="YYYY-MM-DD"
-            placeholder="结束日期"
-          />
+          <el-date-picker v-model="searchForm.endtime" type="date" value-format="YYYY-MM-DD" placeholder="结束日期" />
         </el-form-item>
+
         <el-form-item label="用户类型">
           <el-radio-group v-model="searchForm.level">
             <el-radio-button :label="0">全部</el-radio-button>
@@ -33,13 +26,14 @@
             <el-radio-button :label="2">二级推广</el-radio-button>
           </el-radio-group>
         </el-form-item>
+        
         <el-form-item>
           <el-button type="primary" @click="getTableData(1)">搜素</el-button>
           <el-button @click="resetSearchForm">重置</el-button>
         </el-form-item>
       </el-form>
           
-      <el-table v-loading="isLoading" :data="tableData" stripe style="width: 100%">
+      <el-table v-loading="tableIsLoading" :data="tableDataList" border stripe>
         <template v-if="type == 'user'">
           <el-table-column label="UID" prop="id" width="90" align="center" />
           <el-table-column label="头像" width="100">
@@ -56,6 +50,7 @@
           <el-table-column label="推广订单数量" prop="share_order_num" align="center" />
           <el-table-column label="绑定时间" prop="create_time" align="center" />
         </template>
+        
         <template v-else>
           <el-table-column label="订单号" prop="order.no" align="center" />
           <el-table-column label="用户名|昵称|手机" width="280">
@@ -71,29 +66,27 @@
         </template>
       </el-table>
 
-      <el-pagination 
-        class=" mt-6 flex items-center justify-center"
-        background 
+      <el-pagination
+        v-model:current-page="tablePage"
+        v-model:page-size="tableLimit"
+        class="mt-6 flex items-center justify-center"
+        background
         layout="prev, pager, next" 
-        :total="totalCount" 
-        :current-page="page" 
-        :page-size="limit" 
-        @current-change="changePage"
+        :total="tableTotal"
+        @current-change="onTableCurPaginationChangeEvt"
       />
     </el-drawer>
   </div>
 </template>
 
 <script setup>
-import { computed, ref } from 'vue';
-import { statistics_list, user_bill_list } from '~/api/distribution.js';
-import { useInitTable } from '~/composables/useCommonList.js';
+import { computed, ref, getCurrentInstance } from 'vue';
+import * as useTableHook from '@/hooks/useTableHook';
+
+const { proxy } = getCurrentInstance();
 
 const props = defineProps({
-  type: {
-      type: String,
-      default: 'user'
-  }
+  type: { type: String, default: 'user' }
 });
 
 const drawerTitle = computed(() => {
@@ -102,44 +95,40 @@ const drawerTitle = computed(() => {
 
 
 const {
+  tableIsLoading,
+  tablePage,
+  tableLimit,
+  tableTotal,
+  tableDataList,
   searchForm,
   resetSearchForm,
-  tableData,
-  isLoading,
-  page,
-  limit,
-  totalCount,
   getTableData,
-  changePage,
-} = useInitTable({
-  getTableApi: (() => {
-      return props.type == 'user' ? statistics_list : user_bill_list;
-  })(),
+  onTableCurPaginationChangeEvt,
+} = useTableHook.useBaseTableHook({
+  getTableDataApi: (() => (props.type == 'user' ? proxy.$api.getDistributionListApi : proxy.$api.getDistributionOrderListApi))(),
   searchForm: {
-      level: 0,
-      user_id: 0,
-      type: 'all',
-      starttime: null,
-      endtime: null
-  },
-  onGetListSuccess: (res) => {
-      tableData.value = res.list;
-      totalCount.value = res.totalCount;
+    level: 0,
+    user_id: 0,
+    type: 'all',
+    starttime: null,
+    endtime: null
   },
 });
 
 const drawerVisible = ref(false);
 
-const open = (id) => {
+/**
+ * 打开弹窗
+ */
+const openDrawer = id => {
   searchForm.user_id = id;
   getTableData();
   drawerVisible.value = true;
 };
 
 defineExpose({
-  open
+  openDrawer
 });
-
 </script>
 
 <style lang="scss" scoped>

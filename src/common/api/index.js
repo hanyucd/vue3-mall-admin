@@ -173,6 +173,8 @@ export default {
   uploadSysConfigFileApi: import.meta.env.VITE_APP_BASE_API + '/admin/sysconfig/upload',
   // 获取分销列表
   getDistributionListApi: (page, param) => httpRequest(`/admin/agent/${ page }`, param),
+  // 获取分销订单列表
+  getDistributionOrderListApi: (page, param) => httpRequest(`/admin/user_bill/${ page }`, param),
   // 获取分销统计数据
   getDistributionStatisticsApi: () => httpRequest(`/admin/agent/statistics`),
 };

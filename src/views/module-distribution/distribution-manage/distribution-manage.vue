@@ -77,6 +77,12 @@
         @current-change="onTableCurPaginationChangeEvt"
       />
     </el-card>
+
+
+    <!-- 推广人 -->
+    <DetailDrawer ref="dataDrawerRef" type="user" />
+    <!-- 推广订单 -->
+    <DetailDrawer ref="orderDataDrawerRef" type="order" />
   </div>
 </template>
 
@@ -85,6 +91,7 @@ import TableHeader from '@/components/TableHeader/TableHeader.vue';
 import SearchWrap from '@/components/SearchWrap/SearchWrap.vue';
 import SearchItem from '@/components/SearchItem/SearchItem.vue';
 import DataCard from './components/DataCard/DataCard.vue';
+import DetailDrawer from './components/DetailDrawer/DetailDrawer.vue';
 
 import { ref, getCurrentInstance } from 'vue';
 import * as useTableHook from '@/hooks/useTableHook';
@@ -109,36 +116,14 @@ const {
     endtime: null
   },
   getTableDataApi: proxy.$api.getDistributionListApi,
-  // 回调函数
-  // onGetListSuccess: tableDataRes => {
-  //   tableDataList.value = tableDataRes.list.map(item => {
-  //     item.isLoading = false;
-  //     item.textareaEdit = false;
-  //     return item;
-  //   });
-  //   tableTotal.value = tableDataRes.totalCount;
-  // },
 });
 
 getTableData();
 
-const textarea = ref('');
-const openTextarea = (row, data = '')=>{
-  textarea.value = data;
-  row.textareaEdit = true;
-};
-
-/**
- * 回复商品评论
- */
-const replyGoodsComment = row => {
-  if (!textarea.value) return proxy.$commonUtil.elNotify('回复内容不能为空', 'error');
-
-  proxy.$api.replyGoodsCommentApi(row.id, { data: textarea.value }).then(res => {
-    row.textareaEdit = false;
-    proxy.$commonUtil.elNotify('回复成功');
-    getTableData();
-  });
+const dataDrawerRef = ref(null);
+const orderDataDrawerRef = ref(null);
+const dataDrawerOpen = (id, type = 'user') => {
+  type == 'user' ? dataDrawerRef.value.openDrawer(id) : orderDataDrawerRef.value.openDrawer(id);
 };
 </script>
 
