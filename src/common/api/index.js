@@ -171,4 +171,8 @@ export default {
   updateSysConfigApi: param => httpRequest(`/admin/sysconfig`, param, 'post'),
   // 上传配置文件
   uploadSysConfigFileApi: import.meta.env.VITE_APP_BASE_API + '/admin/sysconfig/upload',
+  // 获取分销列表
+  getDistributionListApi: (page, param) => httpRequest(`/admin/agent/${ page }`, param),
+  // 获取分销统计数据
+  getDistributionStatisticsApi: () => httpRequest(`/admin/agent/statistics`),
 };

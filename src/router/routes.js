@@ -99,16 +99,6 @@ export const asyncRouterMap = [
     meta: { title: '物流配置' },
     component: () => import('@/views/module-setting/setting-ship/setting-ship.vue')
   },
-  // { 
-  //   path: '/setting/buy',
-  //   meta: { title: '支付设置' },
-  //   component: () => import('~/pages/setting/Buy.vue')
-  // },
-  // { 
-  //   path: '/setting/ship',
-  //   meta: { title: '物流设置' },
-  //   component: () => import('~/pages/setting/Ship.vue')
-  // },
   { 
     path: '/manager/list',
     meta: { title: '管理员管理' },
@@ -124,14 +114,14 @@ export const asyncRouterMap = [
     meta: { title: '角色管理' },
     component: () => import('@/views/module-manager/role-manage/role-manage.vue')
   },
-  // { 
-  //   path: '/distribution/index',
-  //   meta: { title: '分销员管理' },
-  //   component: () => import('~/pages/distribution/Index.vue')
-  // },
-  // { 
-  //   path: '/distribution/setting',
-  //   meta: { title: '分销设置' },
-  //   component: () => import('~/pages/distribution/Setting.vue')
-  // },
+  { 
+    path: '/distribution/index',
+    meta: { title: '分销员管理' },
+    component: () => import('@/views/module-distribution/distribution-manage/distribution-manage.vue')
+  },
+  { 
+    path: '/distribution/setting',
+    meta: { title: '分销设置' },
+    component: () => import('@/views/module-distribution/distribution-set/distribution-set.vue')
+  },
 ];
