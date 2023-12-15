@@ -194,12 +194,19 @@ const openOrderDetailDrawer = tableItem => {
   detailDrawerRef.value.openDetailDrawer();
 };
 
-const skuDrawerRef = ref(null);
-/**
- * 打开更新商品规格 drawer
- */
-const openUpdateSkuDrawer = tableItem => {
-  skuDrawerRef.value.openSkuDrawer(tableItem);
+// 同意/拒绝退款
+const handleRefund = (orderId, agree) => {
+  (agree ? proxy.$commonUtil.elMsgBoxConfirm('是否要同意该订单退款') : proxy.$commonUtil.elMsgBoxPrompt('请输入拒绝的理由'))
+  .then(( { value } ) => {
+    let param = { agree };
+    if (!agree) param.disagree_reason = value;
+
+    proxy.$api.refundOrderApi(orderId, param)
+    .then(res => {
+      getTableData();
+      proxy.$commonUtil.elNotify('操作成功');
+    });
+  });
 };
 </script>
 
