@@ -138,7 +138,6 @@ const {
   getTableData,
   onTableCurPaginationChangeEvt,
   handleTableSelectionChangeEvt,
-  handleTableItemDelete,
   handleBatchTableItemDelete,
 } = useTableHook.useBaseTableHook({
   searchForm: {

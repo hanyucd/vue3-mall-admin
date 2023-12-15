@@ -158,9 +158,10 @@ export default {
   updateGoodsCommentStatusApi: (commentId, param) => httpRequest(`/admin/goods_comment/${ commentId }/update_status`, param, 'post'),
   // 回复商品评论
   replyGoodsCommentApi: (commentId, param) => httpRequest(`/admin/goods_comment/review/${ commentId }`, param, 'post'),
-  
   // 获取订单列表
   getOrderLisApi: (page, param) => httpRequest(`/admin/order/${ page }`, param),
+  // 批量删除订单
+  batchDeleteOrderApi: param => httpRequest(`/admin/order/delete_all`, param, 'post'),
   // 导出商品订单
   exportOrderApi: param => httpRequest(`/admin/order/excelexport`, param, 'post', { responseType: 'blob' }),
   // 同意/拒绝订单退款
