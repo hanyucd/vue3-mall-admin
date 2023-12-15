@@ -1,214 +1,122 @@
 <template>
-  <div>
-    <el-tabs v-model="searchForm.tab" class="demo-tabs" @tab-change="onTabChangeEvt">
-      <el-tab-pane v-for="(item, index) in tabbars" :key="index" :label="item.name" :name="item.key" />
-    </el-tabs>
-    
-    <el-card shadow="never" class="border-0">
-      <!-- 搜索 -->
-      <SearchWrap :form-model="searchForm" @searchEvt="getTableData" @resetEvt="resetSearchForm">
-        <SearchItem label="关键词">
-          <el-input v-model="searchForm.title" clearable placeholder="请输入商品名称" />
-        </SearchItem>
-        <!-- 具名插槽 -->
-        <template #more>
-          <SearchItem label="收货人">
-            <el-input v-model="searchForm.name" clearable placeholder="收货人" />
-          </SearchItem>
-
-          <SearchItem label="手机号">
-            <el-input v-model="searchForm.phone" clearable placeholder="手机号" />
-          </SearchItem>
-
-          <SearchItem label="开始日期">
-            <el-date-picker v-model="searchForm.starttime" type="date" value-format="YYYY-MM-DD" placeholder="开始日期" />
-          </SearchItem>
-          <SearchItem label="结束日期">
-            <el-date-picker v-model="searchForm.endtime" type="date" value-format="YYYY-MM-DD" placeholder="结束日期" />
-          </SearchItem>
-        </template>
-      </SearchWrap>
+  <div v-loading="isLoading" class="bg-white p-4 rounded flex-1 overflow-y-auto">
+    <el-form ref="BaseFormRef" :model="BaseForm" label-width="160px">
+      <h5 class="bg-gray-100 p-3 mb-5 rounded">基础设置</h5>
       
-      <!-- 头部 -->
-      <TableHeader btn-list="refresh, delete, download" title="订单" @downloadEvt="openDownExportDrawer" @refreshEvt="getTableData(tablePage)" @deleteEvt="handleBatchTableItemDelete" />
+      <el-form-item label="分销启用">
+        <el-radio-group v-model="BaseForm.distribution_open">
+          <el-radio :label="0" border>
+            禁用
+          </el-radio>
+          <el-radio :label="1" border>
+            启用
+          </el-radio>
+        </el-radio-group>
+      </el-form-item>
       
-      <!-- 表格数据 -->
-      <el-table v-loading="tableIsLoading" :data="tableDataList" border stripe @selection-change="handleTableSelectionChangeEvt">
-        <el-table-column type="selection" width="55" />
+      <el-form-item label="分销海报设置">
+        <ChooseImage v-model="BaseForm.spread_banners" :limit="9" />
+      </el-form-item>
 
-        <el-table-column label="商品">
-          <template #default="{ row }">
-            <div class="flex text-sm">
-              <div class="flex-1">
-                <p>订单号:</p>
-                <small>{{ row.no }}</small>
-              </div>
-              <div>
-                <p>下单时间:</p>
-                <small>{{ row.create_time }}</small>
-              </div>
-            </div>
-            <div v-for="(item, index) in row.order_items" :key="index" class="flex items-center">
-              <el-image :src="item.goods_item ? item.goods_item.cover : ''" fit="cover" :lazy="true" style="width: 50px;height: 50px;" />
-              <p class=" text-blue-400 pl-2">
-                {{ item.goods_item ? item.goods_item.title : '商品已被删除' }}
-              </p>
-            </div>
-          </template>
-        </el-table-column>
+      <h5 class="bg-gray-100 p-3 mb-5 rounded">返佣设置</h5>
+      <el-form-item label="一级返佣比例">
+        <el-input v-model="BaseForm.store_first_rebate" placeholder="一级返佣比例" type="number" style="width: 50%;">
+          <template #apeend>%</template>
+        </el-input>
+        <p class="text-sm text-gray-400 w-full mt-2">订单交易成功后给上级返佣的比例0 - 100， 例：5 = 反订单金额的5%</p>
+      </el-form-item>
 
-        <el-table-column prop="total_price" label="实际付款" align="center" />
+      <el-form-item label="二级返佣比例">
+        <el-input v-model="BaseForm.store_second_rebate" placeholder="二级返佣比例" type="number" style="width: 50%;">
+          <template #apeend>%</template>
+        </el-input>
+        <p class="text-sm text-gray-400 w-full mt-2">订单交易成功后给上级返佣的比例0 - 100， 例：5 = 反订单金额的5%</p>
+      </el-form-item>
+      
+      <el-form-item label="自购返佣">
+        <el-radio-group v-model="BaseForm.is_self_brokerage">
+          <el-radio :label="1" border>是</el-radio>
+          <el-radio :label="0" border>否</el-radio>
+        </el-radio-group>
+        <p class="text-sm text-gray-400 w-full mt-2">是否开启自购返佣(开启:分销元自己购买商品，上级享受二级返佣；关闭：分销员自己购买商品没有返佣)</p>
+      </el-form-item>
 
-        <el-table-column label="买家信息" align="center">
-          <template #default="{ row }">
-            <div class="text-gray-500">
-              {{ row.user.nickname || row.user.username }}
-              <p class=" text-xs">用户ID: {{ row.user.id }}</p>
-            </div>
-          </template>
-        </el-table-column>
-        
-        <el-table-column label="交易状态" align="center">
-          <template #default="{ row }">
-            <div>
-              <el-tag v-if="row.payment_method == 'wechat'" type="success" size="small">微信支付</el-tag>
-              <el-tag v-else-if="row.payment_method == 'alipay'" size="small">支付宝支付</el-tag>
-              <el-tag v-else type="info" size="small">未支付</el-tag>
-            </div>
-            <div>
-              <el-tag :type="row.ship_data ? 'success' : 'info'" size="small">{{ row.ship_data ? '已发货' : '未发货' }}</el-tag>
-            </div>
-            <div>
-              <el-tag :type="row.ship_status == 'received' ? 'success' : 'info'" size="small">{{ row.ship_status == 'received' ? '已收货' : '未收货' }}</el-tag>
-            </div>
-          </template>
-        </el-table-column>
+      <h5 class="bg-gray-100 p-3 mb-5 rounded">结算设置</h5>
+      <el-form-item label="结算时间">
+        <el-input v-model="BaseForm.settlement_days" placeholder="结算时间" type="number" style="width: 50%;">
+          <template #prepend>订单完成后</template>
+          <template #append>天</template>
+        </el-input>
+        <p class="text-sm text-gray-400 w-full mt-2">预估佣金结算后无法进行回收，请谨慎设置结算天数</p>
+      </el-form-item>
 
-        <el-table-column label="操作" align="center">
-          <template #default="{ row }">
-            <el-button size="small" type="primary" @click="openOrderDetailDrawer(row)">订单详情</el-button>
-            <el-button v-if="searchForm.tab === 'noship'" size="small" type="primary">订单发货</el-button>
-            <el-button v-if="searchForm.tab === 'refunding'" size="small" type="success" @click="handleRefund(row.id, 1)">同意退款</el-button>
-            <el-button v-if="searchForm.tab === 'refunding'" size="small" type="danger" @click="handleRefund(row.id, 0)">拒绝退款</el-button>
-          </template>
-        </el-table-column>
-      </el-table>
-  
-      <!-- 分页器 -->
-      <el-pagination
-        v-model:current-page="tablePage"
-        v-model:page-size="tableLimit"
-        class="mt-6 flex items-center justify-center"
-        background
-        layout="prev, pager, next" 
-        :total="tableTotal"
-        @current-change="onTableCurPaginationChangeEvt"
-      />
-    </el-card>
-
-    <!-- 导出 弹窗 -->
-    <ExportDrawer ref="exportDrawerRef" :tabs="tabbars" />
-    <!-- 详情 弹窗 -->
-    <DetailDrawer ref="detailDrawerRef" :order-detail="orderDetail" @reloadDataEvt="getTableData(tablePage)" />
+      <el-form-item label="佣金到账方式">
+        <el-radio-group v-model="BaseForm.brokerage_method">
+          <el-radio label="hand" border>手动转账</el-radio>
+          <el-radio label="wx" border>自动到微信零钱</el-radio>
+        </el-radio-group>
+        <p class="text-sm text-gray-400 w-full mt-2">佣金到账方式支持线下转账和微信零钱自动转账，手动转账更加安全，自动转账更方便</p>
+      </el-form-item>
+         
+      <el-form-item class="mt-5">
+        <el-button type="primary" @click="submitUpdateConfig">保存</el-button>
+      </el-form-item>
+    </el-form>
   </div>
 </template>
 
 <script setup>
-import TableHeader from '@/components/TableHeader/TableHeader.vue';
-import SearchWrap from '@/components/SearchWrap/SearchWrap.vue';
-import SearchItem from '@/components/SearchItem/SearchItem.vue';
-import ExportDrawer from './components/ExportDrawer/ExportDrawer.vue';
-import DetailDrawer from './components/DetailDrawer/DetailDrawer.vue';
-
-import { ref, getCurrentInstance } from 'vue';
-import * as useTableHook from '@/hooks/useTableHook';
+import { ref, reactive, getCurrentInstance } from 'vue';
+import ChooseImage from '@/components/ChooseImage/ChooseImage.vue';
 
 const { proxy } = getCurrentInstance();
 
-const {
-  tableIsLoading,
-  tablePage,
-  tableLimit,
-  tableTotal,
-  tableDataList,
-  tableRef,
-  selectTabItemIds,
-  searchForm,
-  resetSearchForm,
-  getTableData,
-  onTableCurPaginationChangeEvt,
-  handleTableSelectionChangeEvt,
-  handleBatchTableItemDelete,
-} = useTableHook.useBaseTableHook({
-  searchForm: {
-    tab: 'all',
-    no: null,
-    starttime: null,
-    endtime: null,
-    name: null,
-    phone: null
-  },
-  getTableDataApi: proxy.$api.getOrderLisApi,
-  batchDeleteApi: proxy.$api.batchDeleteOrderApi,
+const isLoading = ref(false);
+
+const BaseForm = reactive({
+  // 分销启用:0禁用1启用
+  'distribution_open': 0, 
+  // 一级返佣比例：0~100
+  'store_first_rebate':10, 
+  // 二级返佣比例：0~100
+  'store_second_rebate':20,
+  // 分销海报图
+  'spread_banners':[
+      'http://...png',
+  ],
+  // 自购返佣:0否1是
+  'is_self_brokerage':1,
+  // 结算时间（单位：天）
+  'settlement_days':7,
+  // 佣金到账方式:hand手动,wx微信
+  'brokerage_method':'hand'
 });
 
 
-// tab 标签页
-const tabbars = [
-  { key: 'all', name: '全部' },
-  { key: 'nopay', name: '待支付' },
-  { key: 'noship', name: '待发货' },
-  { key: 'shiped', name: '待收货' },
-  { key: 'received', name: '已收货' },
-  { key: 'finish', name: '已完成' },
-  { key: 'closed', name: '已关闭' },
-  { key: 'refunding', name: '退款中' }
-];
-
-getTableData();
-
-/**
- * tab 改变时触发
- */
-const onTabChangeEvt = activeTabName => {
-  console.log(activeTabName);
-  getTableData();
+const getDistributionConfig = () => {
+  isLoading.value = true;
+  proxy.$api.getDistributionConfigApi().then(res => {
+    for (let key in BaseForm) {
+      BaseForm[key] = res.data[key];
+    }
+  }).finally(() => {
+      isLoading.value = false;
+  });
 };
 
-const exportDrawerRef = ref(null);
-/**
- * 打开导出 drawer
- */
-const openDownExportDrawer = () => {
-  exportDrawerRef.value.openExportDrawer();
-};
+getDistributionConfig();
 
-const detailDrawerRef = ref(null);
-const orderDetail = ref(null);
-/**
- * 打开订单详情 drawer
- */
-const openOrderDetailDrawer = tableItem => {
-  orderDetail.value = tableItem;
-  detailDrawerRef.value.openDetailDrawer();
-};
 
-// 同意/拒绝退款
-const handleRefund = (orderId, agree) => {
-  (agree ? proxy.$commonUtil.elMsgBoxConfirm('是否要同意该订单退款') : proxy.$commonUtil.elMsgBoxPrompt('请输入拒绝的理由'))
-  .then(( { value } ) => {
-    let param = { agree };
-    if (!agree) param.disagree_reason = value;
-
-    proxy.$api.refundOrderApi(orderId, param)
-    .then(res => {
-      getTableData();
-      proxy.$commonUtil.elNotify('操作成功');
-    });
+const submitUpdateConfig = () => {
+  isLoading.value = true;
+  proxy.$api.updateDistributionConfigApi(BaseForm).then(res => {
+    proxy.$commonUtil.elNotify(`修改成功`);
+  }).finally(() => {
+      isLoading.value = false;
   });
 };
 </script>
 
 <style lang="scss" scoped>
-  @import './style.scss';
+
 </style>

@@ -177,4 +177,8 @@ export default {
   getDistributionOrderListApi: (page, param) => httpRequest(`/admin/user_bill/${ page }`, param),
   // 获取分销统计数据
   getDistributionStatisticsApi: () => httpRequest(`/admin/agent/statistics`),
+  // 获取分销设置
+  getDistributionConfigApi: () => httpRequest(`/admin/distribution_setting/get`),
+  // 修改分销设置
+  updateDistributionConfigApi: param => httpRequest(`/admin/distribution_setting/set`, param, 'post'),
 };

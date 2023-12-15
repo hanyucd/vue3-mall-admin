@@ -39,7 +39,7 @@
 
       <!-- 多规格 -->
       <template v-else>
-        <SkuCard />
+        多规格暂未实现
       </template>
     </el-form>
   </FormDrawer>
@@ -47,7 +47,6 @@
 
 <script setup>
 import FormDrawer from '@/components/FormDrawer/FormDrawer.vue';
-import SkuCard from './components/SkuCard/SkuCard.vue';
 import { ref, reactive, getCurrentInstance } from 'vue';
 
 const { proxy } = getCurrentInstance();

@@ -93,7 +93,6 @@ const drawerTitle = computed(() => {
   return props.type == 'user' ? '推广人列表' : '推广订单列表';
 });
 
-
 const {
   tableIsLoading,
   tablePage,
