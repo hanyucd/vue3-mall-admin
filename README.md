@@ -5,13 +5,21 @@
 
 前端：脚手架工具 vite@5.0
 
-主体：**vue3 + vue-router4 + vuex4 + element-plus**
+主体：**vue3 + vue-router4 + vuex4 + element-plus + windicss**
 
 
 ### 成果展示
 
-![这是图片](./display/login.png)
-<p align="center">
-  <!-- <img src="https://github.com/hanyucd/vue-mall-mobile/blob/master/screenshots/home.png" width="320" height="600" />
-  <img src="https://github.com/hanyucd/vue-mall-mobile/blob/master/screenshots/category.png" width="320" height="600" /> -->
-</p>
+![登录](./display/login.png)
+
+
+![首页](./display/home.png)
+
+
+![商品](./display/goods.png)
+
+
+![权限](./display/access.png)
+
+
+![图库](./display/image.png)
