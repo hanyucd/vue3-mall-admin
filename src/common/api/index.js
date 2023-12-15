@@ -140,4 +140,14 @@ export default {
   deleteUserLevelApi: roleId => httpRequest(`/admin/user_level/${ roleId }/delete`, {}, 'post'),
   // 更新会员等级 状态
   updateUserLevelStatusApi: (roleId, param) => httpRequest(`/admin/user_level/${ roleId }/update_status`, param, 'post'),
+  // 获取用户列表
+  getUserLisApi: (page, param) => httpRequest(`/admin/user/${ page }`, param),
+  // 创建用户
+  createUserApi: param => httpRequest(`/admin/user`, param, 'post'),
+  // 更新用户
+  updateUserApi: (userId, param) => httpRequest(`/admin/user/${ userId }`, param, 'post'),
+  // 删除用户
+  deleteUserApi: userId => httpRequest(`/admin/user/${ userId }/delete`, {}, 'post'),
+  // 更新用户 状态
+  updateUserStatusApi: (userId, param) => httpRequest(`/admin/user/${ userId }/update_status`, param, 'post'),
 };
