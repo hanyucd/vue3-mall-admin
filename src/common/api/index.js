@@ -115,7 +115,6 @@ export default {
   updateGoodsSkuApi: (goodsId, param) => httpRequest(`/admin/goods/updateskus/${ goodsId }`, param, 'post'),
   // 审核商品
   checkGoodsApi: (goodsId, param) => httpRequest(`/admin/goods/${ goodsId }/check`, param, 'post'),
-
   // 获取商品分类列表
   getGoodsCategoryListApi: () => httpRequest(`/admin/category`),
   // 创建商品分类
@@ -166,8 +165,10 @@ export default {
   exportOrderApi: param => httpRequest(`/admin/order/excelexport`, param, 'post', { responseType: 'blob' }),
   // 同意/拒绝订单退款
   refundOrderApi: (orderId, param) => httpRequest(`/admin/order/${ orderId }/handle_refund`, param, 'post'),
-  // 获取系统基本设置
+  // 获取系统设置
   getSysConfigApi: () => httpRequest(`/admin/sysconfig`),
   // 修改系统设置
   updateSysConfigApi: param => httpRequest(`/admin/sysconfig`, param, 'post'),
+  // 上传配置文件
+  uploadSysConfigFileApi: import.meta.env.VITE_APP_BASE_API + '/admin/sysconfig/upload',
 };
