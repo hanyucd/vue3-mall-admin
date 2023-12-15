@@ -166,4 +166,8 @@ export default {
   exportOrderApi: param => httpRequest(`/admin/order/excelexport`, param, 'post', { responseType: 'blob' }),
   // 同意/拒绝订单退款
   refundOrderApi: (orderId, param) => httpRequest(`/admin/order/${ orderId }/handle_refund`, param, 'post'),
+  // 获取系统基本设置
+  getSysConfigApi: () => httpRequest(`/admin/sysconfig`),
+  // 修改系统设置
+  updateSysConfigApi: param => httpRequest(`/admin/sysconfig`, param, 'post'),
 };
