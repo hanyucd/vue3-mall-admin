@@ -152,4 +152,10 @@ export default {
   deleteUserApi: userId => httpRequest(`/admin/user/${ userId }/delete`, {}, 'post'),
   // 更新用户 状态
   updateUserStatusApi: (userId, param) => httpRequest(`/admin/user/${ userId }/update_status`, param, 'post'),
+  // 获取商品评论列表
+  getGoodsCommentLisApi: (page, param) => httpRequest(`/admin/goods_comment/${ page }`, param),
+  // 更新商品评论 状态
+  updateGoodsCommentStatusApi: (commentId, param) => httpRequest(`/admin/goods_comment/${ commentId }/update_status`, param, 'post'),
+  // 回复商品评论
+  replyGoodsCommentApi: (commentId, param) => httpRequest(`/admin/goods_comment/review/${ commentId }`, param, 'post'),
 };
